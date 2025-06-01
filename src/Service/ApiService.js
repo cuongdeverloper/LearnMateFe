@@ -41,10 +41,10 @@ const ApiRegister = async (username, email, password, phoneNumber, gender, role,
 export {
     ApiLogin,sendOTPApi,ApiRegister
 }
-import axios from './AxiosCustomize';
+
 
 export const createBooking = (payload) => {
-  return axios.post('/bookings', payload);
+  axios.post(`/booking/${payload.tutorId}`, payload);
 };
 
 export const getTutors = (params) => {
