@@ -1,40 +1,44 @@
 import React, { Suspense } from "react";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Aos from "aos";
-import 'aos/dist/aos.css';
+import "aos/dist/aos.css";
 import { useEffect } from "react";
 import Test from "./components/Test";
+
+import PaymentResult from "./components/Booking/paymentResult";
+import BookingPage from "./components/Booking/bookingPage";
+import TutorListPage from "./components/Booking/tutorPage";
 const Layout = () => {
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+  }, []);
 
-    useEffect(() => {
-        Aos.init({ duration: 1000 }); 
-    }, []);
-
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
-            <BrowserRouter>
-                <Routes>
-                    
-                    <Route path="/" element={<Test />}>
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-        </Suspense>
-    );
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Test />}></Route>
+          <Route path="/tutor" element={<TutorListPage />} />
+          <Route path="/book/:tutorId" element={<BookingPage />} />
+          {/* <Route path="/payment/:bookingId" element={<PaymentResult />} /> */}
+        </Routes>
+      </BrowserRouter>
+    </Suspense>
+  );
 };
 
 export default Layout;
