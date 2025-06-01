@@ -6,6 +6,10 @@ import Aos from "aos";
 import 'aos/dist/aos.css';
 import { useEffect } from "react";
 import Test from "./components/Test";
+import EnterOTPRegister from "./components/Auth/Sign up/OTP/EnterOTPRegister";
+import SignUp from "./components/Auth/Sign up/SignUp";
+import SignIn from "./components/Auth/Sign in/SignIn";
+import AuthCallback from "./components/Auth/AuthCallback";
 const Layout = () => {
 
     useEffect(() => {
@@ -28,9 +32,12 @@ const Layout = () => {
             />
             <BrowserRouter>
                 <Routes>
-                    
                     <Route path="/" element={<Test />}>
                     </Route>
+                     <Route path="/signup" element={<SignUp />}/>
+                    <Route path="/signin" element={<SignIn />}/>
+                    <Route path="/otp-verify" element={<EnterOTPRegister />} />
+                    <Route path="auth/callback" element={<AuthCallback />} />
                 </Routes>
             </BrowserRouter>
         </Suspense>
