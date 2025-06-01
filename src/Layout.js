@@ -5,11 +5,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Aos from "aos";
 import 'aos/dist/aos.css';
 import { useEffect } from "react";
-import Test from "./components/Test";
 import EnterOTPRegister from "./components/Auth/Sign up/OTP/EnterOTPRegister";
 import SignUp from "./components/Auth/Sign up/SignUp";
 import SignIn from "./components/Auth/Sign in/SignIn";
 import AuthCallback from "./components/Auth/AuthCallback";
+import StudentHomePage from "./components/HomePage/Student homepage/StudentHomePage";
+import './index.css'
+import Main from "./components/Main";
 const Layout = () => {
 
     useEffect(() => {
@@ -32,7 +34,8 @@ const Layout = () => {
             />
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Test />}>
+                    <Route path="/" element={<Main />}>
+                        <Route path="/StudentHomepage" element={<StudentHomePage />}/>
                     </Route>
                      <Route path="/signup" element={<SignUp />}/>
                     <Route path="/signin" element={<SignIn />}/>
