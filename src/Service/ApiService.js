@@ -37,9 +37,12 @@ const ApiRegister = async (username, email, password, phoneNumber, gender, role,
     throw error;
   }
 };
-
+const loginWGoogle = () => {
+  console.log('123')
+  return axios.get(`/auth/google/callback`)
+}
 export {
-    ApiLogin,sendOTPApi,ApiRegister
+    ApiLogin,sendOTPApi,ApiRegister,loginWGoogle
 }
 
 

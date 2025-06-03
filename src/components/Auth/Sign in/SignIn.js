@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { ImSpinner9 } from "react-icons/im";
 import { toast } from "react-toastify";
@@ -20,15 +20,14 @@ const SignIn = () => {
   const validateForm = () => {
     setIsFormValid(email && password);
   };
-  // const test = useSelector(state => state);
-
-  // const isAuthenticated = useSelector(state => state.user.isAuthenticated);
-  //   useEffect(() => {
-  //       if (isAuthenticated) {
-  //         // console.log(test)
-  //           navigate('/'); 
-  //       }
-  //   }, [isAuthenticated,navigate]);
+  const test = useSelector(state => state);
+console.log(test)
+  const isAuthenticated = useSelector(state => state.user.isAuthenticated);
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/'); 
+        }
+    }, [isAuthenticated,navigate]);
 
     const redirectGoogleLogin = async () => {
       setIsLoadingLogin(true);
