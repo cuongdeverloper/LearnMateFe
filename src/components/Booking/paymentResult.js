@@ -1,32 +1,54 @@
-// import { useEffect, useState } from 'react';
-// import { useParams } from 'react-router-dom';
-// import axios from '../Service/ApiService';
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import queryString from "query-string";
+import "../../scss/PaymentResult.scss";  // import file scss
 
-// export default function PaymentResult() {
-//   const { bookingId } = useParams();
-//   const [status, setStatus] = useState('');
+const PaymentResult = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = queryString.parse(location.search);
 
-//   useEffect(() => {
-//     const fetchResult = async () => {
-//       try {
-//         const res = await axios.get(`/bookings/pay/success/${bookingId}`);
-//         setStatus('success');
-//       } catch (err) {
-//         setStatus('failed');
-//       }
-//     };
-//     fetchResult();
-//   }, [bookingId]);
+  useEffect(() => {
+    console.log("Payment query params:", queryParams);
+  }, [queryParams]);
 
-//   return (
-//     <div className="p-4 max-w-md mx-auto text-center">
-//       {status === 'success' ? (
-//         <div className="text-green-600 text-xl">Thanh toán thành công!</div>
-//       ) : status === 'failed' ? (
-//         <div className="text-red-600 text-xl">Thanh toán thất bại.</div>
-//       ) : (
-//         <div>Đang xử lý...</div>
-//       )}
-//     </div>
-//   );
-// }
+  const isSuccess = queryParams.vnp_ResponseCode === "00";
+
+  return (
+    <div className="payment-result-container">
+      <h2 className={`payment-result-title ${isSuccess ? "success" : "failure"}`}>
+        {isSuccess ? "Thanh toán thành công 🎉" : "Thanh toán thất bại ❌"}
+      </h2>
+
+      {isSuccess ? (
+        <div className="payment-message success-message">
+          <p>Cảm ơn bạn đã sử dụng dịch vụ!</p>
+          <p><strong>Mã giao dịch:</strong> {queryParams.vnp_TxnRef}</p>
+          <p><strong>Số tiền:</strong> {(queryParams.vnp_Amount / 100).toLocaleString()} VND</p>
+        </div>
+      ) : (
+        <div className="payment-message failure-message">
+          <p>Thanh toán thất bại hoặc bị hủy.</p>
+          <p><strong>Mã lỗi:</strong> {queryParams.vnp_ResponseCode || "Không rõ"}</p>
+        </div>
+      )}
+
+      <div className="button-group">
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate("/")}
+        >
+          Quay về Trang chủ
+        </button>
+        <button
+          className="btn btn-secondary"
+          onClick={() => navigate("/tutor")}
+        >
+          Quay lại tìm thêm
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default PaymentResult;

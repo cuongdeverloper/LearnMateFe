@@ -29,6 +29,11 @@ export default function TutorListPage() {
     maxPrice: "",
     minRating: "",
   });
+  const [loggedInUser, setLoggedInUser] = useState({
+    username: "Nguyen Van A",
+    avatar: "https://i.pravatar.cc/150?img=32",
+  });
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const navigate = useNavigate();
 
@@ -86,18 +91,56 @@ export default function TutorListPage() {
           TutorBooking
         </div>
         <div className="navbar-menu">
-          <button onClick={() => navigate("/login")} className="btn btn-outline">
-            Đăng nhập
-          </button>
-          <button onClick={() => navigate("/register")} className="btn btn-primary">
-            Đăng ký
-          </button>
+          {loggedInUser ? (
+            <div className="avatar-dropdown">
+              <img
+                src={loggedInUser.avatar}
+                alt="avatar"
+                className="avatar-img"
+                onClick={(e) => {
+                  e.stopPropagation(); // ngăn click lan lên
+                  setShowDropdown(!showDropdown);
+                }}
+              />
+              {showDropdown && (
+                <ul className="dropdown-menu">
+                  <li onClick={() => navigate("/user/paymentinfo")}>Thanh toán</li>
+                  <li onClick={() => navigate("/history")}>Lịch sử đặt lịch</li>
+                  <li
+                    onClick={() => {
+                      setLoggedInUser(null);
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Đăng xuất
+                  </li>
+                </ul>
+              )}
+            </div>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate("/login")}
+                className="btn btn-outline"
+              >
+                Đăng nhập
+              </button>
+              <button
+                onClick={() => navigate("/register")}
+                className="btn btn-primary"
+              >
+                Đăng ký
+              </button>
+            </>
+          )}
         </div>
       </nav>
 
       <header className="page-header">
         <h1>Chọn Gia Sư Phù Hợp</h1>
-        <p className="sub-title">Tìm kiếm gia sư theo lớp học, môn học, giá và đánh giá</p>
+        <p className="sub-title">
+          Tìm kiếm gia sư theo lớp học, môn học, giá và đánh giá
+        </p>
       </header>
 
       <div className="main-layout">
@@ -109,7 +152,9 @@ export default function TutorListPage() {
               {[...Array(12)].map((_, i) => (
                 <div key={i + 1}>
                   <button
-                    className={`grade-btn ${selectedClass === i + 1 ? "selected" : ""}`}
+                    className={`grade-btn ${
+                      selectedClass === i + 1 ? "selected" : ""
+                    }`}
                     onClick={() => handleClassSelect(i + 1)}
                   >
                     Lớp {i + 1}
@@ -120,7 +165,9 @@ export default function TutorListPage() {
                       {(classSubjectsMap[i + 1] || []).map((subj, idx) => (
                         <button
                           key={idx}
-                          className={`subject-btn ${selectedSubject === subj ? "selected" : ""}`}
+                          className={`subject-btn ${
+                            selectedSubject === subj ? "selected" : ""
+                          }`}
                           onClick={() => handleSubjectSelect(subj)}
                         >
                           {subj}
@@ -141,7 +188,12 @@ export default function TutorListPage() {
               <div className="filter-row">
                 <div className="filter-group">
                   <label>Tên Tutor</label>
-                  <input type="text" name="name" value={filters.name} onChange={handleFilterChange} />
+                  <input
+                    type="text"
+                    name="name"
+                    value={filters.name}
+                    onChange={handleFilterChange}
+                  />
                 </div>
                 <div className="filter-group">
                   <label>Giá tối thiểu</label>
@@ -174,7 +226,10 @@ export default function TutorListPage() {
                   />
                 </div>
                 <div className="filter-group filter-btn-group">
-                  <button onClick={handleFilterApply} className="btn btn-primary btn-filter">
+                  <button
+                    onClick={handleFilterApply}
+                    className="btn btn-primary btn-filter"
+                  >
                     Lọc Gia Sư
                   </button>
                 </div>
@@ -197,24 +252,39 @@ export default function TutorListPage() {
                       className="tutor-avatar"
                       src={
                         tutor.avatar ||
-                        "https://i.pravatar.cc/100?img=" + (Math.floor(Math.random() * 70) + 1)
+                        "https://i.pravatar.cc/100?img=" +
+                          (Math.floor(Math.random() * 70) + 1)
                       }
                       alt={tutor.name || tutor.fullName}
                     />
                     <div className="tutor-info">
-                    <h3>{tutor.user?.username || "Gia sư chưa có tên"}</h3>
+                      <h3>{tutor.user?.username || "Gia sư chưa có tên"}</h3>
                       <div className="rating">
                         <FaStar className="star-icon" />
-                        <span>{tutor.rating ? tutor.rating.toFixed(1) : "Chưa có đánh giá"}</span>
+                        <span>
+                          {tutor.rating
+                            ? tutor.rating.toFixed(1)
+                            : "Chưa có đánh giá"}
+                        </span>
                       </div>
-                      <p><strong>Email:</strong> {tutor.user?.email || "Chưa cập nhật"}</p>
-                      <p><strong>Điện thoại:</strong> {tutor.user?.phoneNumber || "Không rõ"}</p>
                       <p>
-                        <strong>Môn dạy:</strong> {tutor.subjects?.join(", ") || "Đang cập nhật"}
+                        <strong>Email:</strong>{" "}
+                        {tutor.user?.email || "Chưa cập nhật"}
                       </p>
-                      <p className="tutor-desc">{tutor.description || "Gia sư chuyên nghiệp, tận tâm."}</p>
+                      <p>
+                        <strong>Điện thoại:</strong>{" "}
+                        {tutor.user?.phoneNumber || "Không rõ"}
+                      </p>
+                      <p>
+                        <strong>Môn dạy:</strong>{" "}
+                        {tutor.subjects?.join(", ") || "Đang cập nhật"}
+                      </p>
+                      <p className="tutor-desc">
+                        {tutor.description || "Gia sư chuyên nghiệp, tận tâm."}
+                      </p>
                       <div className="tutor-price">
-                        Giá: {tutor.pricePerHour?.toLocaleString() || "Liên hệ"} VND / giờ
+                        Giá: {tutor.pricePerHour?.toLocaleString() || "Liên hệ"}{" "}
+                        VND / giờ
                       </div>
                     </div>
                   </div>
