@@ -34,34 +34,47 @@ export default function BookingPage() {
       toast.warn('Vui lòng nhập số buổi học hợp lệ');
       return;
     }
-
+  
     setLoading(true);
     try {
       const totalAmount = tutor.pricePerHour * numberOfSessions;
-
-      const payload = {
-        tutorId,
+  
+      // Step 1: Tạo booking
+      const res = await axios.post(`/bookings/${tutorId}`, {
         amount: totalAmount,
         numberOfSessions,
-      };
-
-      const res = await createBooking(payload);
-      if (res?.data?.paymentUrl) {
+      });
+  
+      const bookingId = res.bookingId;
+      if (!bookingId) throw new Error('Không thể tạo booking');
+  
+      // Step 2: Gọi tới VNPay để lấy payment URL
+      const paymentRes = await axios.post('/payment/create-vnpay', {
+        bookingId,
+        amount: totalAmount,
+      });
+  
+      const paymentUrl = paymentRes.paymentUrl;
+      if (paymentUrl) {
         toast.success('Đang chuyển hướng đến thanh toán...');
         setTimeout(() => {
-          window.location.href = res.data.paymentUrl;
+          window.location.href = paymentUrl;
         }, 1000);
       } else {
-        toast.error('Đã xảy ra lỗi khi tạo thanh toán');
+        toast.error('Không lấy được URL thanh toán');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Đặt lịch thất bại');
+      console.error('Lỗi đặt lịch:', err);
+      if (err.response) {
+        console.error('Response data:', err.response.data);
+      }
+      toast.error(err.response?.data?.message || err.message || 'Đặt lịch thất bại');
     } finally {
       setLoading(false);
       setShowConfirmModal(false);
     }
   };
-
+  
   // Khi bấm nút "Thanh toán & Đặt lịch", hiện modal
   const handleShowConfirm = () => {
     if (!numberOfSessions || numberOfSessions <= 0) {
