@@ -18,7 +18,16 @@ import BookingPage from "./components/Booking/bookingPage";
 import TutorListPage from "./components/Booking/tutorPage";
 import PaymentPage from "./components/User/PaymentPage";
 
+
+import PaymentResult from "./components/Booking/paymentResult";
+import BookingPage from "./components/Booking/bookingPage";
+import TutorListPage from "./components/Booking/tutorPage";
+import PaymentPage from "./components/User/PaymentPage";
+
 const Layout = () => {
+  useEffect(() => {
+    Aos.init({ duration: 1000 });
+  }, []);
   useEffect(() => {
     Aos.init({ duration: 1000 });
   }, []);

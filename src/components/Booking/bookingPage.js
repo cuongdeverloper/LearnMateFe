@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import axios from '../../Service/AxiosCustomize';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../../scss/BookingPage.scss';
 import { useSelector } from "react-redux";
 
@@ -45,7 +47,6 @@ export default function BookingPage() {
         toast.error('Không thể lấy thông tin số dư');
       }
     };
-
     fetchTutor();
     fetchBalance();
   }, [tutorId]);
@@ -90,6 +91,7 @@ export default function BookingPage() {
       toast.error(err.response?.data?.message || err.message || 'Đặt lịch thất bại');
     } finally {
       setLoading(false);
+      setShowConfirmModal(false);
       setShowConfirmModal(false);
     }
   };
