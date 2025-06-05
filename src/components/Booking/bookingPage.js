@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { createBooking } from '../../Service/ApiService';
 import axios from '../../Service/AxiosCustomize';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../scss/BookingPage.scss';
+import { useSelector } from "react-redux";
 
 export default function BookingPage() {
   const { tutorId } = useParams();
@@ -12,7 +12,9 @@ export default function BookingPage() {
   const [loading, setLoading] = useState(false);
   const [numberOfSessions, setNumberOfSessions] = useState(1);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
+  const [balance, setBalance] = useState(null);
+  const userId = useSelector((state) => state.user.account.id);
+  const token = useSelector((state) => state.user.account.access_token);
   useEffect(() => {
     const fetchTutor = async () => {
       try {
@@ -26,7 +28,26 @@ export default function BookingPage() {
         toast.error('Lỗi khi tải thông tin gia sư');
       }
     };
+
+    const fetchBalance = async () => {
+      try {
+        const infoRes = await fetch(`http://localhost:6060/user/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!infoRes.ok) throw new Error("Lấy thông tin người dùng thất bại");
+        const infoData = await infoRes.json();
+        if (infoData.user.balance !== undefined) {
+          setBalance(infoData.user.balance);
+        }
+      } catch (err) {
+        toast.error('Không thể lấy thông tin số dư');
+      }
+    };
+
     fetchTutor();
+    fetchBalance();
   }, [tutorId]);
 
   const handleBooking = async () => {
@@ -34,48 +55,45 @@ export default function BookingPage() {
       toast.warn('Vui lòng nhập số buổi học hợp lệ');
       return;
     }
-  
+
     setLoading(true);
     try {
       const totalAmount = tutor.pricePerHour * numberOfSessions;
-  
-      // Step 1: Tạo booking
-      const res = await axios.post(`/bookings/${tutorId}`, {
-        amount: totalAmount,
-        numberOfSessions,
-      });
-  
-      const bookingId = res.bookingId;
-      if (!bookingId) throw new Error('Không thể tạo booking');
-  
-      // Step 2: Gọi tới VNPay để lấy payment URL
-      const paymentRes = await axios.post('/payment/create-vnpay', {
-        bookingId,
-        amount: totalAmount,
-      });
-  
-      const paymentUrl = paymentRes.paymentUrl;
-      if (paymentUrl) {
-        toast.success('Đang chuyển hướng đến thanh toán...');
-        setTimeout(() => {
-          window.location.href = paymentUrl;
-        }, 1000);
+
+      if (balance < totalAmount) {
+        toast.error('Số dư không đủ để thanh toán');
+        setLoading(false);
+        return;
+      }
+
+      const res = await axios.post(
+        `/bookings/${tutorId}`,
+        {
+          amount: totalAmount,
+          numberOfSessions,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.success) {
+        toast.success('Đặt lịch thành công và đã trừ tiền từ số dư!');
+        setBalance(prev => prev - totalAmount);
       } else {
-        toast.error('Không lấy được URL thanh toán');
+        toast.error(res.message || 'Đặt lịch thất bại');
       }
     } catch (err) {
       console.error('Lỗi đặt lịch:', err);
-      if (err.response) {
-        console.error('Response data:', err.response.data);
-      }
       toast.error(err.response?.data?.message || err.message || 'Đặt lịch thất bại');
     } finally {
       setLoading(false);
       setShowConfirmModal(false);
     }
   };
-  
-  // Khi bấm nút "Thanh toán & Đặt lịch", hiện modal
+
   const handleShowConfirm = () => {
     if (!numberOfSessions || numberOfSessions <= 0) {
       toast.warn('Vui lòng nhập số buổi học hợp lệ');
@@ -148,12 +166,21 @@ export default function BookingPage() {
             />
           </div>
 
+          <div className="form-group">
+            <label>Số dư tài khoản</label>
+            <input
+              type="text"
+              value={balance?.toLocaleString() + ' VND' || '...'}
+              disabled
+            />
+          </div>
+
           <button
             onClick={handleShowConfirm}
             disabled={loading || !tutor}
             className="btn-booking"
           >
-            {loading ? 'Đang xử lý...' : 'Thanh toán & Đặt lịch'}
+            {loading ? 'Đang xử lý...' : 'Trừ tiền & Đặt lịch'}
           </button>
         </div>
       </div>

@@ -47,7 +47,7 @@ const Layout = () => {
                     <Route path="/otp-verify" element={<EnterOTPRegister />} />
                     <Route path="auth/callback" element={<AuthCallback />} />
 
-                    <Route path="/" element={<Test />}></Route>
+                  
           <Route path="/tutor" element={<TutorListPage />} />
           <Route path="/book/:tutorId" element={<BookingPage />} />
           <Route path="/payment/result" element={<PaymentResult />} />
