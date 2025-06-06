@@ -41,6 +41,24 @@ const loginWGoogle = () => {
   console.log('123')
   return axios.get(`/auth/google/callback`)
 }
+
+const requestPasswordResetApi = async (email) => {
+    try {
+        const response = await axios.post('/rqreset-password', { email });
+        return response;
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+const resetPasswordApi = async (token, newPassword) => {
+    try {
+        const response = await axios.post('/reset-password', { token, newPassword });
+        return response;
+    } catch (error) {
+        console.log(error)
+    }
+};
 export {
-    ApiLogin,sendOTPApi,ApiRegister,loginWGoogle
+    ApiLogin,sendOTPApi,ApiRegister,loginWGoogle,requestPasswordResetApi,resetPasswordApi
 }

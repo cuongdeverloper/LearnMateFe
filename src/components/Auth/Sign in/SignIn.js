@@ -21,7 +21,6 @@ const SignIn = () => {
     setIsFormValid(email && password);
   };
   const test = useSelector(state => state);
-console.log(test)
   const isAuthenticated = useSelector(state => state.user.isAuthenticated);
     useEffect(() => {
         if (isAuthenticated) {
@@ -50,7 +49,6 @@ console.log(test)
         Cookies.set('accessToken', response.data.access_token, { expires: 1 });
         Cookies.set('refreshToken', response.data.refresh_token, { expires: 7 });
         await dispatch(doLogin(response));
-        console.log('slt',checkRole)
         if(checkRole && checkRole === 'tutor') {
           navigate('/TutorHomepage');
         } 
@@ -124,6 +122,10 @@ console.log(test)
         <button type="button" className="btn-secondary">
           <FaFacebook /> Sign in with Facebook
         </button>
+        <button type="button" className="btn-secondary">
+          <a onClick={()=>navigate('/forgot-password')}>Forgot password</a>
+        </button>
+        
         <p className="footer-text">
           Don't have an account? <a href="/signup">Sign up</a>
         </p>

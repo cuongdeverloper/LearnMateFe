@@ -12,6 +12,8 @@ import AuthCallback from "./components/Auth/AuthCallback";
 import StudentHomePage from "./components/HomePage/Student homepage/StudentHomePage";
 import './index.css'
 import Main from "./components/Main";
+import RequestPasswordReset from "./components/Auth/reset password/RequestPasswordReset";
+import ResetPassword from "./components/Auth/reset password/ResetPassword";
 const Layout = () => {
 
     useEffect(() => {
@@ -41,6 +43,8 @@ const Layout = () => {
                     <Route path="/signin" element={<SignIn />}/>
                     <Route path="/otp-verify" element={<EnterOTPRegister />} />
                     <Route path="auth/callback" element={<AuthCallback />} />
+                    <Route path="/forgot-password" element={<RequestPasswordReset />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
                 </Routes>
             </BrowserRouter>
         </Suspense>
