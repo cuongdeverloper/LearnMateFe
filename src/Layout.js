@@ -14,6 +14,7 @@ import './index.css'
 import Main from "./components/Main";
 import RequestPasswordReset from "./components/Auth/reset password/RequestPasswordReset";
 import ResetPassword from "./components/Auth/reset password/ResetPassword";
+import Messenger from "./Message Socket/Page/Messenger";
 const Layout = () => {
 
     useEffect(() => {
@@ -45,6 +46,7 @@ const Layout = () => {
                     <Route path="auth/callback" element={<AuthCallback />} />
                     <Route path="/forgot-password" element={<RequestPasswordReset />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
+                     <Route path="/messenger" element={<Messenger />} />
                 </Routes>
             </BrowserRouter>
         </Suspense>

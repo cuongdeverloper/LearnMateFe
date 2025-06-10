@@ -1,4 +1,5 @@
 import axios from './AxiosCustomize';
+import Cookies from 'js-cookie';
 const ApiLogin = (userEmail, userPassword) => {
   return axios.post('/login', { email: userEmail, password: userPassword });
 }
@@ -59,6 +60,118 @@ const resetPasswordApi = async (token, newPassword) => {
         console.log(error)
     }
 };
+const ApiGetUserByUserId = async (userId) => {
+  try {
+    const token = Cookies.get("accessToken");
+
+    if (!token) {
+      window.open("/signin", "_blank");
+      return;
+    }
+
+    const response = await axios.get(`/user/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error get user:", error);
+    return null;
+  }
+};
+const ApiMarkMessagesAsSeen = async (conversationId) => {
+  try {
+    const token = Cookies.get("accessToken");
+
+    if (!token) {
+      window.open("/signin", "_blank");
+      return;
+    }
+
+    const response = await axios.put(`/seenmessage/${conversationId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error message seen :", error);
+    return null;
+  }
+};
+const ApiSendMessage = async (receiverId, text) => {
+  try {
+    const token = Cookies.get("accessToken");
+
+    if (!token) {
+      window.open("/signin", "_blank");
+      return;
+    }
+
+    const response = await axios.post(
+      "/message",
+      { receiverId, text },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Error sending message:", error);
+    return null;
+  }
+};
+
+const getConversationApi = async () => {
+  try {
+    const token = Cookies.get("accessToken");
+
+    if (!token) {
+      window.open("/signin", "_blank");
+      return null;
+    }
+
+    const response = await axios.get(`/conversation`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error getting conversations:", error);
+    return null;
+  }
+};
+const ApiGetMessageByConversationId = async (conversationId) => {
+  try {
+    const token = Cookies.get("accessToken");
+
+    if (!token) {
+      window.open("/signin", "_blank");
+      return;
+    }
+
+    const response = await axios.get(`/messages/${conversationId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error get chat:", error);
+    return null;
+  }
+};
 export {
-    ApiLogin,sendOTPApi,ApiRegister,loginWGoogle,requestPasswordResetApi,resetPasswordApi
+    ApiLogin,sendOTPApi,ApiRegister,loginWGoogle,requestPasswordResetApi,resetPasswordApi,
+    ApiGetUserByUserId,ApiMarkMessagesAsSeen,ApiSendMessage,getConversationApi,ApiGetMessageByConversationId
 }
