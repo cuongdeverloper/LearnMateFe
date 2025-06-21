@@ -1,0 +1,95 @@
+
+.tutor-homepage {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9fafb;
+  color: #1f2937;
+}
+
+.hero {
+  background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+  padding: 4rem 0;
+  text-align: left;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero h1 span {
+  color: #2563eb;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.subject-filter {
+  padding: 2rem 0;
+  background-color: #fff;
+}
+
+.featured-tutors {
+  padding: 3rem 0;
+  background-color: #f1f5f9;
+}
+
+.featured-tutors h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.tutor-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.tutor-card:hover {
+  transform: translateY(-5px);
+}
+
+.avatar-placeholder {
+  width: 80px;
+  height: 80px;
+  background-color: #cbd5e1;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+}
+
+.tutor-footer {
+  background-color: #1e3a8a;
+  color: white;
+  padding: 3rem 1rem;
+}
+
+.tutor-footer h5 {
+  margin-bottom: 1rem;
+}
+
+.tutor-footer ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.tutor-footer ul li {
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.tutor-footer p {
+  margin-bottom: 0.5rem;
+}
+
+.copyright {
+  margin-top: 2rem;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
