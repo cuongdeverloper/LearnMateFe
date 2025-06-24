@@ -29,6 +29,7 @@ const Messenger = () => {
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
+        conversationId: data.conversationId,
       });
     });
   }, []);
@@ -37,6 +38,16 @@ const Messenger = () => {
       currentChat?.members.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
+  useEffect(() => {
+  if (
+    arrivalMessage &&
+    currentChat &&
+    arrivalMessage.conversationId === currentChat._id
+  ) {
+    setMessages((prev) => [...prev, arrivalMessage]);
+  }
+}, [arrivalMessage, currentChat]);
+
   useEffect(() => {
     socket.current.emit("addUser", user.account.id);
     socket.current.on("getUsers", (users) => {
@@ -61,6 +72,7 @@ const Messenger = () => {
       senderId: user.account.id,
       receiverId,
       text: newMessage,
+      conversationId: currentChat._id,
     });
 
     try {
