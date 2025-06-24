@@ -18,7 +18,6 @@ const ResetPassword = () => {
         }
         try {
             const response = await resetPasswordApi(token, newPassword);
-            
             if (response.errorCode === 0) {
                 toast.success(response.message);
                 navigate('/signin');

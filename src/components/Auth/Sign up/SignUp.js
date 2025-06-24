@@ -64,7 +64,7 @@ const SignUp = () => {
           <select
             id="genderForm"
             className="form-control input-field"
-            value={gender}
+            value={role}
             onChange={(event) => setRole(event.target.value)}
           >
             <option value="">Select role</option>

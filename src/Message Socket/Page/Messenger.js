@@ -5,6 +5,8 @@ import './Messenger.scss'
 import Conversation from "../components/conversations";
 import Message from "../components/message/Message";
 import { io } from "socket.io-client";
+import {useNavigate } from "react-router-dom"
+
 const Messenger = () => {
   const user = useSelector(state => state.user);
   const [conversations, setConversations] = useState([]);
@@ -15,6 +17,8 @@ const Messenger = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const socket = useRef();
   const scrollRef = useRef();
+  const isAuthenticated = useSelector(user => user.user.isAuthenticated);
+  const navigate = useNavigate();
   if(messages){
     console.log(messages)
   }
@@ -74,6 +78,11 @@ const Messenger = () => {
     }
 
   };
+   useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/signin");
+    }
+  }, [isAuthenticated, navigate]);
   useEffect(() => {
     const getConversations = async () => {
       try {
