@@ -15,6 +15,7 @@ import Main from "./components/Main";
 import RequestPasswordReset from "./components/Auth/reset password/RequestPasswordReset";
 import ResetPassword from "./components/Auth/reset password/ResetPassword";
 import Messenger from "./Message Socket/Page/Messenger";
+import Profile from './components/HomePage/Profile/Profile';
 const Layout = () => {
 
     useEffect(() => {
@@ -38,7 +39,7 @@ const Layout = () => {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Main />}>
-                        <Route path="/StudentHomepage" element={<StudentHomePage />}/>
+                        <Route path="/StudentHomepage" element={<StudentHomePage />}/>                 
                     </Route>
                      <Route path="/signup" element={<SignUp />}/>
                     <Route path="/signin" element={<SignIn />}/>
@@ -47,6 +48,7 @@ const Layout = () => {
                     <Route path="/forgot-password" element={<RequestPasswordReset />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
                      <Route path="/messenger" element={<Messenger />} />
+                     <Route path="/profile" element={<Profile />} />
                 </Routes>
             </BrowserRouter>
         </Suspense>
