@@ -175,3 +175,15 @@ export {
     ApiLogin,sendOTPApi,ApiRegister,loginWGoogle,requestPasswordResetApi,resetPasswordApi,
     ApiGetUserByUserId,ApiMarkMessagesAsSeen,ApiSendMessage,getConversationApi,ApiGetMessageByConversationId
 }
+
+export const createBooking = (payload) => {
+  axios.post(`/booking/${payload.tutorId}`, payload);
+};
+
+export const getTutors = (params) => {
+  return axios.get('/tutors', { params });
+};
+
+export const fetchSlots = (bookingId) => axios.get(`http://localhost:6060/schedule/booking/${bookingId}/slots`);
+export const addSlot = (bookingId, slot) => axios.post(`http://localhost:6060/schedule/booking/${bookingId}/add`, slot);
+export const removeSlot = (scheduleId) => axios.delete(`http://localhost:6060/schedule/${scheduleId}`);
