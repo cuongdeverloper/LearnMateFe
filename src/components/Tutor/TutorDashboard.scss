@@ -1,0 +1,49 @@
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  background: #f9fafb;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #1f2937;
+  color: #fff;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links li {
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.nav-links li:hover {
+  background-color: #374151;
+}
+
+.nav-links li.active {
+  background-color: #2563eb;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
