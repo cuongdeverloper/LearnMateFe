@@ -81,10 +81,22 @@ const Layout = () => {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/otp-verify" element={<EnterOTPRegister />} />
           <Route path="auth/callback" element={<AuthCallback />} />
-          <Route path="/forgot-password" element={<RequestPasswordReset />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/messenger" element={<Messenger />} />
-<Route path="/messenger/:conversationId" element={<Messenger />} />
+          <Route path="/forgot-password" element={
+            <ProtectedRoute allowedRoles={['tutor', 'student']}>
+              <RequestPasswordReset />
+            </ProtectedRoute>} />
+          <Route path="/reset-password" element={
+            <ProtectedRoute allowedRoles={['tutor', 'student']}>
+              <ResetPassword />
+            </ProtectedRoute>} />
+          <Route path="/messenger" element={
+            <ProtectedRoute allowedRoles={['tutor', 'student', 'admin']}>
+              <Messenger />
+            </ProtectedRoute>} />
+          <Route path="/messenger/:conversationId" element={
+            <ProtectedRoute allowedRoles={['tutor', 'student', 'admin']}>
+              <Messenger />
+            </ProtectedRoute>} />
           <Route path="/TutorDashboard" element={
             <ProtectedRoute allowedRoles={['tutor']}>
               <TutorDashboard />
@@ -93,65 +105,62 @@ const Layout = () => {
           <Route
             path="/tutor"
             element={
-              <AppLayout>
+              <ProtectedRoute allowedRoles={['student', 'admin']}>
                 <TutorListPage />
-              </AppLayout>
-            }
+              </ProtectedRoute>}
           />
           <Route
             path="/saved-tutors"
             element={
-              <AppLayout>
+              <ProtectedRoute allowedRoles={['student']}>
                 <SavedTutorsPage />
-              </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/book/:tutorId"
             element={
-              <AppLayout>
+              <ProtectedRoute allowedRoles={['student']}>
                 <BookingPage />
-              </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/booking/:bookingId/schedule"
             element={
-              <AppLayout>
+              <ProtectedRoute allowedRoles={['tutor', 'student']}>
                 <BookingSchedule />
-              </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/payment/result"
             element={
-              <AppLayout>
-                <PaymentResult />
-              </AppLayout>
+              <PaymentResult />
             }
           />
           <Route
             path="/user/paymentinfo"
             element={
-              <AppLayout>
+              <ProtectedRoute allowedRoles={['tutor', 'student']}>
                 <PaymentPage />
-              </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/user/bookinghistory"
             element={
-              <AppLayout>
+              <ProtectedRoute allowedRoles={['tutor', 'student']}>
                 <BookingHistoryPage />
-              </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/user/my-courses"
             element={
-              <AppLayout>
+              <ProtectedRoute allowedRoles={['tutor', 'student']}>
                 <MyCourses />
-              </AppLayout>
+              </ProtectedRoute>
             }
           />
 
@@ -171,14 +180,23 @@ const Layout = () => {
               <TutorApplications />
             </ProtectedRoute>
           } />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/tutor-application" element={<TutorApplicationForm />} />
+          <Route path="/profile"
+            element={
+              <ProtectedRoute allowedRoles={['tutor', 'student', 'admin']}>
+                <Profile />
+              </ProtectedRoute>} />
+          <Route path="/tutor-application" element={
+            <ProtectedRoute allowedRoles={['tutor', 'student']}>
+              <TutorApplicationForm />
+            </ProtectedRoute>
+          }
+          />
           <Route
             path="/review/:bookingId"
             element={
-              <AppLayout>
+              <ProtectedRoute allowedRoles={['student']}>
                 <ReviewCoursePage />
-              </AppLayout>
+              </ProtectedRoute>
             }
           />
           <Route path="/verify-account" element={<VerifyAccount />} />

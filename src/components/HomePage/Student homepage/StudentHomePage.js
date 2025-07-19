@@ -66,7 +66,7 @@ const StudentHomePage = () => {
       <header className="header">
         <div className="logo">LearnMate</div>
         <nav className="nav">
-          <a href="//tutor">Tìm gia sư</a>
+          <a href="/tutor">Tìm gia sư</a>
           <a href="/tutor-application">Trở thành gia sư</a>
         </nav>
         <div className="right-section">

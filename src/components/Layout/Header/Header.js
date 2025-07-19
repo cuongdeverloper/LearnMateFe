@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { FaShoppingBag, FaComments, FaChalkboardTeacher } from "react-icons/fa";
+import { FaShoppingBag, FaComments, FaChalkboardTeacher, FaArrowLeft } from "react-icons/fa";
 import axios from "../../../Service/AxiosCustomize";
 import "./Header.scss";
 
@@ -43,6 +43,9 @@ const Header = () => {
   return (
     <header className="custom-header">
       <div className="header-inner">
+        <div className="back-button" onClick={() => navigate(-1)}>
+      <FaArrowLeft />
+    </div>
         <Link to="/" className="logo-text">
           <FaChalkboardTeacher className="logo-icon" />
           LearnMate
