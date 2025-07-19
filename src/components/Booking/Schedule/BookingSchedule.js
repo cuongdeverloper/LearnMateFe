@@ -161,7 +161,7 @@ const loadBusySlots = async () => {
 
     setLoading(true);
     try {
-      await axios.post(`http://localhost:6060/schedule/booking/${bookingId}/add-slots`, {
+      await axios.post(`hhttps://learnmatebe.onrender.com/schedule/booking/${bookingId}/add-slots`, {
         slots: slotsToSave,
       });
       toast.success("Thêm lịch thành công!");
@@ -176,7 +176,7 @@ const loadBusySlots = async () => {
   const handleDeleteSlot = async (scheduleId) => {
     if (!window.confirm("Bạn có chắc muốn xóa slot này?")) return;
     try {
-      await axios.delete(`http://localhost:6060/schedule/${scheduleId}`);
+      await axios.delete(`https://learnmatebe.onrender.com/schedule/${scheduleId}`);
       toast.success("Xóa slot thành công!");
       loadBusySlots();
     } catch (err) {

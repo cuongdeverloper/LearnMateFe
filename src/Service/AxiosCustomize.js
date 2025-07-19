@@ -5,7 +5,7 @@ import { store } from '../redux/store';
 
 
 const instance = axios.create({
-    baseURL: 'http://localhost:6060/',
+    baseURL: 'https://learnmatebe.onrender.com/',
     withCredentials: true,
 });
 

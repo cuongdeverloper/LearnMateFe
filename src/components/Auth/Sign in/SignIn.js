@@ -32,7 +32,7 @@ const SignIn = () => {
       setIsLoadingLogin(true);
       try {
           // Redirect to your backend to authenticate
-          window.location.href = "http://localhost:6060/auth/google";
+          window.location.href = "https://learnmatebe.onrender.com/auth/google";
       } catch (error) {
           console.error('Google login error:', error);
           toast.error("An error occurred during Google login. Please try again.");

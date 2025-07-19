@@ -34,7 +34,7 @@ export default function PaymentPage() {
         setError(null);
         try {
             // Fetch User Info
-            const infoRes = await fetch(`http://localhost:6060/me/info`, {
+            const infoRes = await fetch(`https://learnmatebe.onrender.com/me/info`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -43,7 +43,7 @@ export default function PaymentPage() {
             const infoData = await infoRes.json();
 
             // Fetch Top-up History (payments)
-            const historyRes = await fetch(`http://localhost:6060/me/payments`, {
+            const historyRes = await fetch(`https://learnmatebe.onrender.com/me/payments`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -52,7 +52,7 @@ export default function PaymentPage() {
             const historyData = await historyRes.json();
 
             // Fetch Withdrawal History
-            const withdrawalRes = await fetch(`http://localhost:6060/me/withdrawals`, {
+            const withdrawalRes = await fetch(`https://learnmatebe.onrender.com/me/withdrawals`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -62,8 +62,8 @@ export default function PaymentPage() {
 
             // Fetch Financial Flow History - Dựa trên state `useCombinedFinancialFlow`
             let financialFlowEndpoint = useCombinedFinancialFlow ? 
-                                        `http://localhost:6060/me/financial-flowhistory` : 
-                                        `http://localhost:6060/me/financial-flow`;      
+                                        `https://learnmatebe.onrender.com/me/financial-flowhistory` : 
+                                        `https://learnmatebe.onrender.com/me/financial-flow`;      
             
             const financialFlowRes = await fetch(financialFlowEndpoint, {
                 headers: {
@@ -100,7 +100,7 @@ export default function PaymentPage() {
         setError(null);
 
         try {
-            const res = await fetch("http://localhost:6060/payment/create-vnpay", {
+            const res = await fetch("https://learnmatebe.onrender.com/payment/create-vnpay", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -147,7 +147,7 @@ export default function PaymentPage() {
         setError(null);
 
         try {
-            const res = await fetch("http://localhost:6060/payment/withdraw", {
+            const res = await fetch("https://learnmatebe.onrender.com/payment/withdraw", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
