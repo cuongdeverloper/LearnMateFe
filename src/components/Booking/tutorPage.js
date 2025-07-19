@@ -7,6 +7,7 @@ import { FaStar } from "react-icons/fa";
 import { FaBookmark, FaShoppingBag } from "react-icons/fa";
 import { toast } from "react-toastify"; // Import toast
 import "../../scss/TutorListPage.scss";
+import Header from "../Layout/Header/Header";
 
 const classSubjectsMap = {
   1: ["Toán", "Tiếng Việt"],
@@ -213,6 +214,7 @@ export default function TutorListPage() {
 
   return (
     <div className="page-container">
+      <Header/>
       <header className="page-header">
         <h1>Tìm Gia Sư Hoàn Hảo Của Bạn</h1>
         <p className="sub-title">

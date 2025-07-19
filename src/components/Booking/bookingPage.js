@@ -3,9 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../Service/AxiosCustomize';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../../scss/BookingPage.scss'; 
+import '../../scss/BookingPage.scss';
 import { useSelector } from "react-redux";
 import { ApiCreateConversation, getReviewsByTutor, getTutorById, getUserBalance } from '../../Service/ApiService';
+import Header from '../Layout/Header/Header';
 
 export default function BookingPage() {
   const { tutorId } = useParams();
@@ -21,78 +22,78 @@ export default function BookingPage() {
   const navigate = useNavigate();
 
   const handleChatNow = async () => {
-  try {
-    const res = await ApiCreateConversation(tutor.user._id);
-    if (res) {
-      navigate(`/messenger/${res._id}`);
+    try {
+      const res = await ApiCreateConversation(tutor.user._id);
+      if (res) {
+        navigate(`/messenger/${res._id}`);
 
 
-    } else {
-      toast.error("Không thể tạo cuộc trò chuyện");
+      } else {
+        toast.error("Không thể tạo cuộc trò chuyện");
+      }
+    } catch (err) {
+      console.error("Lỗi tạo cuộc trò chuyện:", err);
+      toast.error("Lỗi khi bắt đầu trò chuyện");
     }
-  } catch (err) {
-    console.error("Lỗi tạo cuộc trò chuyện:", err);
-    toast.error("Lỗi khi bắt đầu trò chuyện");
-  }
-};
+  };
 
   useEffect(() => {
-  const fetchTutor = async () => {
-    try {
-      const res = await getTutorById(tutorId);
-      if (res?.tutor) {
-        setTutor(res.tutor);
+    const fetchTutor = async () => {
+      try {
+        const res = await getTutorById(tutorId);
+        if (res?.tutor) {
+          setTutor(res.tutor);
+        } else {
+          toast.error('Không thể tải thông tin gia sư');
+        }
+      } catch (err) {
+        toast.error('Lỗi khi tải thông tin gia sư');
+      }
+    };
+
+    const fetchBalance = async () => {
+      const balance = await getUserBalance();
+      if (balance !== null) {
+        setBalance(balance);
       } else {
-        toast.error('Không thể tải thông tin gia sư');
+        toast.error('Không thể lấy thông tin số dư');
       }
-    } catch (err) {
-      toast.error('Lỗi khi tải thông tin gia sư');
-    }
-  };
+    };
 
-  const fetchBalance = async () => {
-    const balance = await getUserBalance();
-    if (balance !== null) {
-      setBalance(balance);
-    } else {
-      toast.error('Không thể lấy thông tin số dư');
-    }
-  };
-
-  const fetchReviews = async () => {
-    try {
-      const res = await getReviewsByTutor(tutorId);
-      if (res) {
-        setReviews(res);
+    const fetchReviews = async () => {
+      try {
+        const res = await getReviewsByTutor(tutorId);
+        if (res) {
+          setReviews(res);
+        }
+      } catch (err) {
+        console.error('Lỗi khi tải review:', err);
+        toast.error('Lỗi khi tải đánh giá');
       }
-    } catch (err) {
-      console.error('Lỗi khi tải review:', err);
-      toast.error('Lỗi khi tải đánh giá');
+    };
+
+    fetchTutor();
+    fetchBalance();
+    fetchReviews();
+  }, [tutorId, userId, token]);
+  const renderReviews = () => {
+    if (!reviews.length) {
+      return <p>Chưa có đánh giá nào cho gia sư này.</p>;
     }
+
+    return (
+      <ul className="review-list">
+        {reviews.map((review) => (
+          <li key={review._id} className="review-item">
+            <p>
+              <strong>{review.user?.username || "Người dùng ẩn danh"}</strong>: {review.comment}
+            </p>
+            <p>Đánh giá: {"⭐".repeat(review.rating)}</p>
+          </li>
+        ))}
+      </ul>
+    );
   };
-
-  fetchTutor();
-  fetchBalance();
-  fetchReviews();
-}, [tutorId, userId, token]);
-const renderReviews = () => {
-  if (!reviews.length) {
-    return <p>Chưa có đánh giá nào cho gia sư này.</p>;
-  }
-
-  return (
-    <ul className="review-list">
-      {reviews.map((review) => (
-        <li key={review._id} className="review-item">
-          <p>
-            <strong>{review.user?.username || "Người dùng ẩn danh"}</strong>: {review.comment}
-          </p>
-          <p>Đánh giá: {"⭐".repeat(review.rating)}</p>
-        </li>
-      ))}
-    </ul>
-  );
-};
 
   const handleBooking = async () => {
     if (!numberOfSessions || numberOfSessions <= 0) {
@@ -174,110 +175,114 @@ const renderReviews = () => {
   };
 
   return (
-    <div className="booking-wrapper">
-      {/* Left Panel: Đánh giá */}
-      <div className="side-panel left-panel">
-  <h3>Đánh giá</h3>
-  {renderReviews()}
-</div>
-
-      {/* Center: Thông tin gia sư + đặt lịch */}
-      <div className="booking-container">
-        <div className="booking-card">
-          <h2>Xác nhận đặt lịch học</h2>
-
-          {tutor ? renderTutorInfo() : <p>Đang tải thông tin gia sư...</p>}
-
-          <div className="form-group">
-            <label htmlFor="numberOfSessions">Số buổi học</label>
-            <input
-              id="numberOfSessions"
-              type="number"
-              min={1}
-              value={numberOfSessions}
-              onChange={(e) => setNumberOfSessions(Number(e.target.value))}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="totalAmount">Tổng số tiền thanh toán (VND)</label>
-            <input
-              id="totalAmount"
-              type="text"
-              value={(tutor?.pricePerHour * numberOfSessions)?.toLocaleString() || ''}
-              disabled
-            />
-          </div>
-
-          {/* New form group for the note */}
-          <div className="form-group">
-            <label htmlFor="note">Ghi chú cho gia sư (ví dụ: thời gian rảnh, yêu cầu đặc biệt)</label>
-            <textarea
-              id="note"
-              rows="4"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Ví dụ: Em muốn học vào buổi tối các ngày thứ 3, 5. Em cần gia sư tập trung vào phần ngữ pháp..."
-            ></textarea>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="balance">Số dư tài khoản</label>
-            <input
-              id="balance"
-              type="text"
-              value={balance !== null ? balance.toLocaleString() + ' VND' : '...'}
-              disabled
-            />
-          </div>
-
-          <button
-            onClick={handleShowConfirm}
-            disabled={loading || !tutor}
-            className="btn-booking"
-          >
-            {loading ? 'Đang xử lý...' : 'Trừ tiền & Đặt lịch'}
-          </button>
+    <>
+      <Header />
+      <div className="booking-wrapper">
+        {/* Left Panel: Đánh giá */}
+        <div className="side-panel left-panel">
+          <h3>Đánh giá</h3>
+          {renderReviews()}
         </div>
-      </div>
 
-      {/* Right Panel: Cam kết */}
-      <div className="side-panel right-panel">
-        <h3>Cam kết từ gia sư</h3>
-        <ul>
-          <li>✅ Dạy đúng giờ, đủ buổi</li>
-          <li>✅ Soạn bài kỹ lưỡng</li>
-          <li>✅ Hỗ trợ học sinh ngoài giờ</li>
-          <li>✅ Đảm bảo tiến bộ sau 1 tháng</li>
-        </ul>
-      </div>
+        {/* Center: Thông tin gia sư + đặt lịch */}
+        <div className="booking-container">
+          <div className="booking-card">
+            <h2>Xác nhận đặt lịch học</h2>
 
-      {/* Modal Xác nhận */}
-      {showConfirmModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Xác nhận đặt lịch</h3>
-            <p>Bạn có chắc muốn đặt **{numberOfSessions} buổi học** với tổng số tiền **{(tutor?.pricePerHour * numberOfSessions).toLocaleString()} VND**?</p>
-            {note && <p className="modal-note">Ghi chú của bạn: _{note}_</p>} {/* Display the note in the modal */}
-            <div className="modal-actions">
-              <button
-                className="btn btn-confirm"
-                onClick={handleBooking}
-                disabled={loading}
-              >
-                {loading ? 'Đang xử lý...' : 'Xác nhận'}
-              </button>
-              <button
-                className="btn btn-cancel"
-                onClick={() => setShowConfirmModal(false)}
-                disabled={loading}
-              >
-                Hủy
-              </button>
+            {tutor ? renderTutorInfo() : <p>Đang tải thông tin gia sư...</p>}
+
+            <div className="form-group">
+              <label htmlFor="numberOfSessions">Số buổi học</label>
+              <input
+                id="numberOfSessions"
+                type="number"
+                min={1}
+                value={numberOfSessions}
+                onChange={(e) => setNumberOfSessions(Number(e.target.value))}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="totalAmount">Tổng số tiền thanh toán (VND)</label>
+              <input
+                id="totalAmount"
+                type="text"
+                value={(tutor?.pricePerHour * numberOfSessions)?.toLocaleString() || ''}
+                disabled
+              />
+            </div>
+
+            {/* New form group for the note */}
+            <div className="form-group">
+              <label htmlFor="note">Ghi chú cho gia sư (ví dụ: thời gian rảnh, yêu cầu đặc biệt)</label>
+              <textarea
+                id="note"
+                rows="4"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Ví dụ: Em muốn học vào buổi tối các ngày thứ 3, 5. Em cần gia sư tập trung vào phần ngữ pháp..."
+              ></textarea>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="balance">Số dư tài khoản</label>
+              <input
+                id="balance"
+                type="text"
+                value={balance !== null ? balance.toLocaleString() + ' VND' : '...'}
+                disabled
+              />
+            </div>
+
+            <button
+              onClick={handleShowConfirm}
+              disabled={loading || !tutor}
+              className="btn-booking"
+            >
+              {loading ? 'Đang xử lý...' : 'Trừ tiền & Đặt lịch'}
+            </button>
+          </div>
+        </div>
+
+        {/* Right Panel: Cam kết */}
+        <div className="side-panel right-panel">
+          <h3>Cam kết từ gia sư</h3>
+          <ul>
+            <li>✅ Dạy đúng giờ, đủ buổi</li>
+            <li>✅ Soạn bài kỹ lưỡng</li>
+            <li>✅ Hỗ trợ học sinh ngoài giờ</li>
+            <li>✅ Đảm bảo tiến bộ sau 1 tháng</li>
+          </ul>
+        </div>
+
+        {/* Modal Xác nhận */}
+        {showConfirmModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3>Xác nhận đặt lịch</h3>
+              <p>Bạn có chắc muốn đặt **{numberOfSessions} buổi học** với tổng số tiền **{(tutor?.pricePerHour * numberOfSessions).toLocaleString()} VND**?</p>
+              {note && <p className="modal-note">Ghi chú của bạn: _{note}_</p>} {/* Display the note in the modal */}
+              <div className="modal-actions">
+                <button
+                  className="btn btn-confirm"
+                  onClick={handleBooking}
+                  disabled={loading}
+                >
+                  {loading ? 'Đang xử lý...' : 'Xác nhận'}
+                </button>
+                <button
+                  className="btn btn-cancel"
+                  onClick={() => setShowConfirmModal(false)}
+                  disabled={loading}
+                >
+                  Hủy
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
+
   );
 }
