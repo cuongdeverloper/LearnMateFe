@@ -8,9 +8,6 @@ const Main = () => {
     const navigate = useNavigate();
     console.log(checkRole)
      useEffect(() => {
-    if (!user || !checkRole) {
-      navigate("/signin");
-    } else {
       if (checkRole === "tutor") {
         navigate("/TutorDashboard");
       } else if (checkRole === "student") {
@@ -18,7 +15,6 @@ const Main = () => {
       } else if (checkRole === "admin") {
         navigate("/admin/dashboard");
       }
-    }
   }, [user, checkRole, navigate]);
     return (
         <>
