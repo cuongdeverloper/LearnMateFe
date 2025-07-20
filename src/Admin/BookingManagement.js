@@ -49,7 +49,7 @@ const BookingManagement = () => {
   setScheduleLoading(true);
   try {
     const data = await fetchScheduleDataApi(bookingId);
-    if (data.errorCode === 0) {
+    if (data && data.length > 0) {
       setScheduleData(data.data);
       return data.data;
     } else {
@@ -73,10 +73,9 @@ const fetchBookings = async (params = {}) => {
       ...filters,
       ...params,
     });
-
-    if (data.errorCode === 0) {
-      setBookings(data.data);
-      setTotal(data.total);
+    if (data && data.length > 0) {
+      setBookings(data);
+      setTotal(data.length);
     } else {
       message.error(data.message || 'Không thể tải dữ liệu. Vui lòng thử lại sau.');
     }

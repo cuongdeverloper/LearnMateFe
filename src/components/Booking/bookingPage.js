@@ -178,110 +178,131 @@ export default function BookingPage() {
     <>
       <Header />
       <div className="booking-wrapper">
-        {/* Left Panel: Đánh giá */}
-        <div className="side-panel left-panel">
-          <h3>Đánh giá</h3>
-          {renderReviews()}
-        </div>
-
-        {/* Center: Thông tin gia sư + đặt lịch */}
-        <div className="booking-container">
-          <div className="booking-card">
-            <h2>Xác nhận đặt lịch học</h2>
-
-            {tutor ? renderTutorInfo() : <p>Đang tải thông tin gia sư...</p>}
-
-            <div className="form-group">
-              <label htmlFor="numberOfSessions">Số buổi học</label>
-              <input
-                id="numberOfSessions"
-                type="number"
-                min={1}
-                value={numberOfSessions}
-                onChange={(e) => setNumberOfSessions(Number(e.target.value))}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="totalAmount">Tổng số tiền thanh toán (VND)</label>
-              <input
-                id="totalAmount"
-                type="text"
-                value={(tutor?.pricePerHour * numberOfSessions)?.toLocaleString() || ''}
-                disabled
-              />
-            </div>
-
-            {/* New form group for the note */}
-            <div className="form-group">
-              <label htmlFor="note">Ghi chú cho gia sư (ví dụ: thời gian rảnh, yêu cầu đặc biệt)</label>
-              <textarea
-                id="note"
-                rows="4"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Ví dụ: Em muốn học vào buổi tối các ngày thứ 3, 5. Em cần gia sư tập trung vào phần ngữ pháp..."
-              ></textarea>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="balance">Số dư tài khoản</label>
-              <input
-                id="balance"
-                type="text"
-                value={balance !== null ? balance.toLocaleString() + ' VND' : '...'}
-                disabled
-              />
-            </div>
-
-            <button
-              onClick={handleShowConfirm}
-              disabled={loading || !tutor}
-              className="btn-booking"
-            >
-              {loading ? 'Đang xử lý...' : 'Trừ tiền & Đặt lịch'}
-            </button>
-          </div>
-        </div>
-
-        {/* Right Panel: Cam kết */}
-        <div className="side-panel right-panel">
-          <h3>Cam kết từ gia sư</h3>
-          <ul>
-            <li>✅ Dạy đúng giờ, đủ buổi</li>
-            <li>✅ Soạn bài kỹ lưỡng</li>
-            <li>✅ Hỗ trợ học sinh ngoài giờ</li>
-            <li>✅ Đảm bảo tiến bộ sau 1 tháng</li>
-          </ul>
-        </div>
-
-        {/* Modal Xác nhận */}
-        {showConfirmModal && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Xác nhận đặt lịch</h3>
-              <p>Bạn có chắc muốn đặt **{numberOfSessions} buổi học** với tổng số tiền **{(tutor?.pricePerHour * numberOfSessions).toLocaleString()} VND**?</p>
-              {note && <p className="modal-note">Ghi chú của bạn: _{note}_</p>} {/* Display the note in the modal */}
-              <div className="modal-actions">
-                <button
-                  className="btn btn-confirm"
-                  onClick={handleBooking}
-                  disabled={loading}
-                >
-                  {loading ? 'Đang xử lý...' : 'Xác nhận'}
-                </button>
-                <button
-                  className="btn btn-cancel"
-                  onClick={() => setShowConfirmModal(false)}
-                  disabled={loading}
-                >
-                  Hủy
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+      {/* Left Panel: Đánh giá */}
+      <div className="side-panel left-panel">
+        <h3>Đánh giá</h3>
+        <ul>
+          <li><strong>⭐⭐⭐⭐⭐ (4.9)</strong> - 25 lượt đánh giá</li>
+          <li>“Rất nhiệt tình, con tôi tiến bộ nhanh”</li>
+          <li>“Giải thích dễ hiểu, đúng giờ”</li>
+          <li>“Phương pháp dạy dễ hiểu và sinh động”</li>
+        </ul>
       </div>
+
+      {/* Center: Thông tin gia sư + đặt lịch */}
+      <div className="booking-container">
+        <div className="booking-card">
+          <h2>Xác nhận đặt lịch học</h2>
+
+          {tutor ? renderTutorInfo() : <p>Đang tải thông tin gia sư...</p>}
+
+          <div className="form-group">
+            <label htmlFor="numberOfSessions">Số buổi học</label>
+            <input
+              id="numberOfSessions"
+              type="number"
+              min={1}
+              value={numberOfSessions}
+              onChange={(e) => setNumberOfSessions(Number(e.target.value))}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="totalAmount">Tổng số tiền thanh toán (VND)</label>
+            <input
+              id="totalAmount"
+              type="text"
+              value={(tutor?.pricePerHour * numberOfSessions)?.toLocaleString() || ''}
+              disabled
+            />
+          </div>
+
+          {/* New form group for the note */}
+          <div className="form-group">
+            <label htmlFor="note">Ghi chú cho gia sư (ví dụ: thời gian rảnh, yêu cầu đặc biệt)</label>
+            <textarea
+              id="note"
+              rows="4"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Ví dụ: Em muốn học vào buổi tối các ngày thứ 3, 5. Em cần gia sư tập trung vào phần ngữ pháp..."
+            ></textarea>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="balance">Số dư tài khoản</label>
+            <input
+              id="balance"
+              type="text"
+              value={balance !== null ? balance.toLocaleString() + ' VND' : '...'}
+              disabled
+            />
+          </div>
+
+          <button
+            onClick={handleShowConfirm}
+            disabled={loading || !tutor}
+            className="btn-booking"
+          >
+            {loading ? 'Đang xử lý...' : 'Trừ tiền & Đặt lịch'}
+          </button>
+        </div>
+      </div>
+
+      {/* Right Panel: Cam kết */}
+      <div className="side-panel right-panel">
+  <h3>Cam kết từ gia sư</h3>
+  <div className="guarantee-section">
+    <div className="guarantee-item">
+      <h4>⏰ Thời gian & Tính kỷ luật</h4>
+      <p>Gia sư luôn đúng giờ, không nghỉ đột xuất. Buổi học được đảm bảo đúng lịch, thông báo trước ít nhất 24h nếu có thay đổi.</p>
+    </div>
+    <div className="guarantee-item">
+      <h4>📚 Chất lượng bài giảng</h4>
+      <p>Bài học được chuẩn bị trước, phù hợp trình độ và mục tiêu học sinh. Có lộ trình rõ ràng và tài liệu hỗ trợ.</p>
+    </div>
+    <div className="guarantee-item">
+      <h4>💬 Hỗ trợ ngoài giờ</h4>
+      <p>Luôn sẵn sàng giải đáp thắc mắc qua tin nhắn hoặc video call ngắn. Học sinh có thể gửi bài tập mọi lúc.</p>
+    </div>
+    <div className="guarantee-item">
+      <h4>📈 Cam kết hiệu quả</h4>
+      <p>Sau 4 tuần, học sinh sẽ thấy sự tiến bộ rõ rệt về kỹ năng, điểm số hoặc sự tự tin khi học. Nếu không, hỗ trợ học thêm miễn phí.</p>
+    </div>
+    <div className="guarantee-item">
+      <h4>🤝 Cá nhân hóa & Thích nghi</h4>
+      <p>Luôn lắng nghe phụ huynh và học sinh để điều chỉnh phương pháp, tốc độ học cho phù hợp nhất.</p>
+    </div>
+  </div>
+</div>
+
+      {/* Modal Xác nhận */}
+      {showConfirmModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Xác nhận đặt lịch</h3>
+            <p>Bạn có chắc muốn đặt **{numberOfSessions} buổi học** với tổng số tiền **{(tutor?.pricePerHour * numberOfSessions).toLocaleString()} VND**?</p>
+            {note && <p className="modal-note">Ghi chú của bạn: _{note}_</p>} {/* Display the note in the modal */}
+            <div className="modal-actions">
+              <button
+                className="btn btn-confirm"
+                onClick={handleBooking}
+                disabled={loading}
+              >
+                {loading ? 'Đang xử lý...' : 'Xác nhận'}
+              </button>
+              <button
+                className="btn btn-cancel"
+                onClick={() => setShowConfirmModal(false)}
+                disabled={loading}
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
     </>
 
   );
