@@ -111,13 +111,13 @@ function MyCourses() {
   };
   // ✅ Hàm hoàn tất khóa học
   const handleFinishBooking = async (bookingId) => {
-    try {
-      await finishBooking(bookingId)
-      toast.success("Khóa học đã hoàn tất, tiền đã được chuyển cho gia sư.");
+    const result = await finishBooking(bookingId);
+  
+    if (result.success) {
+      toast.success(result.message || "Khóa học đã hoàn tất, tiền đã được chuyển cho gia sư.");
       fetchBookings();
-    } catch (error) {
-      console.error("Error finishing booking:", error);
-      toast.error(error.response?.data?.message || "Lỗi hoàn tất khóa học.");
+    } else {
+      toast.error(result.message || "Lỗi hoàn tất khóa học.");
     }
   };
   const fetchAllWeeklySchedules = async () => {

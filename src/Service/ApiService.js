@@ -351,7 +351,7 @@ const finishBooking = async (bookingId) => {
     return { success: true, data: response };
   } catch (error) {
     console.error("Lỗi hoàn tất khóa học:", error);
-    const message = error.response?.message || "Lỗi hoàn tất khóa học.";
+    const message = error.response?.data?.message || "Lỗi hoàn tất khóa học.";
     return { success: false, message };
   }
 };
