@@ -7,7 +7,6 @@ import { finishBooking, getMaterialsByBookingId, getMyBookings, getMyWeeklySched
 import { useNavigate } from 'react-router-dom';
 import Header from '../Layout/Header/Header';
 
-// Component Modal xác nhận tùy chỉnh (unchanged)
 const ConfirmationModal = ({ title, message, onConfirm, onCancel }) => {
   return (
     <div className="confirmation-modal-overlay">
@@ -25,7 +24,6 @@ const ConfirmationModal = ({ title, message, onConfirm, onCancel }) => {
   );
 };
 
-// Component Modal hiển thị tài liệu (unchanged)
 const MaterialsModal = ({ bookingTitle, materials, onClose }) => {
   return (
     <div className="materials-modal-overlay">
@@ -114,7 +112,7 @@ function MyCourses() {
   // ✅ Hàm hoàn tất khóa học
   const handleFinishBooking = async (bookingId) => {
     try {
-      await finishBooking()
+      await finishBooking(bookingId)
       toast.success("Khóa học đã hoàn tất, tiền đã được chuyển cho gia sư.");
       fetchBookings();
     } catch (error) {

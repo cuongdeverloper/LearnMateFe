@@ -390,7 +390,7 @@ const markScheduleAttendance = async (scheduleId, attended) => {
 
     const response = await axios.patch(
       `/schedule/${scheduleId}/attendance`,
-      { attended },
+      { attended: Boolean(attended) },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -398,10 +398,10 @@ const markScheduleAttendance = async (scheduleId, attended) => {
       }
     );
 
-    return { success: true, data: response };
+    return { success: true, data: response.data };
   } catch (error) {
     console.error("Lỗi khi điểm danh:", error);
-    const message = error.response?.message || "Lỗi không xác định khi điểm danh.";
+    const message = error.response?.data?.message || "Lỗi không xác định khi điểm danh.";
     return { success: false, message };
   }
 };
