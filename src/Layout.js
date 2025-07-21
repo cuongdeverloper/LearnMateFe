@@ -106,14 +106,19 @@ const Layout = () => {
             path="/tutor"
             element={
               <ProtectedRoute allowedRoles={['student', 'admin']}>
-                <TutorListPage />
+                <AppLayout>
+                  <TutorListPage />
+                </AppLayout>
               </ProtectedRoute>}
           />
           <Route
             path="/saved-tutors"
             element={
               <ProtectedRoute allowedRoles={['student']}>
-                <SavedTutorsPage />
+                <AppLayout>
+                  <SavedTutorsPage />
+                </AppLayout>
+
               </ProtectedRoute>
             }
           />
@@ -143,7 +148,9 @@ const Layout = () => {
             path="/user/paymentinfo"
             element={
               <ProtectedRoute allowedRoles={['tutor', 'student']}>
-                <PaymentPage />
+                <AppLayout>
+                  <PaymentPage />
+                </AppLayout>
               </ProtectedRoute>
             }
           />
