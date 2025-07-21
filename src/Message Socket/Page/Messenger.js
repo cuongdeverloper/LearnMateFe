@@ -53,7 +53,7 @@ useEffect(() => {
 
 
   useEffect(() => {
-  socket.current = io("https://quizonebe.onrender.com", {
+  socket.current = io("https://learnmatebe.onrender.com", {
     transports: ["websocket", "polling"],
     withCredentials: true,
   });
