@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Message from "../components/message/Message";
+import { ApiMarkMessagesAsSeen } from "../../../src/Service/ApiService";
 
 const ChatBox = ({
   currentChat,
@@ -9,36 +10,59 @@ const ChatBox = ({
   handleSubmit,
   scrollRef,
   user,
-  receiver
+  receiver,
+  socket,
 }) => {
+  const chatTopRef = useRef();
+
+  // ✅ Gửi 'seen' khi scroll đến cuối khung chat
+  const handleScroll = async () => {
+    if (!chatTopRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = chatTopRef.current;
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+
+    if (isAtBottom) {
+      try {
+        const senderId = currentChat.members.find((m) => m !== user.account.id);
+        await ApiMarkMessagesAsSeen(currentChat._id); // Mark as seen in DB
+        socket.current.emit("seenMessage", {
+          senderId,
+          conversationId: currentChat._id,
+        });
+      } catch (err) {
+        console.error("Error marking messages as seen:", err);
+      }
+    }
+  };
+
   return (
     <div className="chatBox">
       <div className="chatBoxWrapper">
         {currentChat ? (
           <>
-          <div className="chatHeader">
-  <div className="chatHeaderLeft">
-    <img
-      src={receiver?.image || "/default-avatar.png"}
-      alt="avatar"
-      className="chatHeaderAvatar"
-    />
-    <div>
-      <div className="chatHeaderName">{receiver?.username}</div>
-      {/* <div className="chatHeaderStatus">
+            <div className="chatHeader">
+              <div className="chatHeaderLeft">
+                <img
+                  src={receiver?.image || "/default-avatar.png"}
+                  alt="avatar"
+                  className="chatHeaderAvatar"
+                />
+                <div>
+                  <div className="chatHeaderName">{receiver?.username}</div>
+                  {/* <div className="chatHeaderStatus">
         <span className="onlineDot"></span>
         Đang hoạt động
       </div> */}
-    </div>
-  </div>
-  <div className="chatHeaderRight">
-    <i className="fas fa-phone"></i>
-    <i className="fas fa-video"></i>
-    <i className="fas fa-info-circle"></i>
-  </div>
-</div>
+                </div>
+              </div>
+              <div className="chatHeaderRight">
+                <i className="fas fa-phone"></i>
+                <i className="fas fa-video"></i>
+                <i className="fas fa-info-circle"></i>
+              </div>
+            </div>
 
-            <div className="chatBoxTop">
+            <div className="chatBoxTop" ref={chatTopRef} onScroll={handleScroll} style={{ overflowY: "auto", maxHeight: "500px" }}>
               {messages.length === 0 ? (
                 <div className="noMessageYet">No messages yet. Say hi!</div>
               ) : (
@@ -59,6 +83,7 @@ const ChatBox = ({
                 })
               )}
             </div>
+
             <div className="chatBoxBottom">
               <textarea
                 className="chatMessageInput"

@@ -1,78 +1,81 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { ApiGetMessageByConversationId, ApiGetUserByUserId, ApiMarkMessagesAsSeen, ApiSendMessage, getConversationApi } from "../../../src/Service/ApiService";
-import './Messenger.scss'
+import {
+  ApiGetMessageByConversationId,
+  ApiGetUserByUserId,
+  ApiSendMessage,
+  getConversationApi
+} from "../../../src/Service/ApiService";
+import "./Messenger.scss";
 import Conversation from "../components/conversations";
 import { io } from "socket.io-client";
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom";
 import ChatBox from "./ChatBox";
-import { useParams } from "react-router-dom";
 import Header from "../../components/Layout/Header/Header";
-
 
 const Messenger = () => {
   const { conversationId } = useParams();
+  const user = useSelector((state) => state.user);
+  const isAuthenticated = user.user.isAuthenticated;
 
-  const user = useSelector(state => state.user);
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [receiver, setReceiver] = useState(null);
+
   const socket = useRef();
   const scrollRef = useRef();
-  const isAuthenticated = useSelector(user => user.user.isAuthenticated);
-const [receiver, setReceiver] = useState(null);
-useEffect(() => {
-  const fetchReceiver = async () => {
-    if (currentChat) {
-      const friendId = currentChat.members.find((m) => m !== user.account.id);
-      if (friendId) {
-        try {
-          const res = await ApiGetUserByUserId(friendId);
-          setReceiver(res);
-        } catch (err) {
-          console.error("Failed to fetch receiver:", err);
+  const navigate = useNavigate();
+
+  // Fetch receiver info
+  useEffect(() => {
+    const fetchReceiver = async () => {
+      if (currentChat) {
+        const friendId = currentChat.members.find((m) => m !== user.account.id);
+        if (friendId) {
+          try {
+            const res = await ApiGetUserByUserId(friendId);
+            setReceiver(res);
+          } catch (err) {
+            console.error("Failed to fetch receiver:", err);
+          }
         }
       }
-    }
-  };
-  fetchReceiver();
-}, [currentChat, user.account.id]);
-  const navigate = useNavigate();
+    };
+    fetchReceiver();
+  }, [currentChat, user.account.id]);
+
   useEffect(() => {
     if (!conversationId || conversations.length === 0) return;
-
     const matched = conversations.find((c) => c._id === conversationId);
-    if (matched) {
-      setCurrentChat(matched);
-    }
+    if (matched) setCurrentChat(matched);
   }, [conversationId, conversations]);
 
-
-
+  // Socket init
   useEffect(() => {
-  socket.current = io("https://learnmatebe.onrender.com", {
-    transports: ["websocket", "polling"],
-    withCredentials: true,
-  });
-
-  socket.current.on("getMessage", (data) => {
-    setArrivalMessage({
-      sender: data.senderId,
-      text: data.text,
-      createdAt: Date.now(),
-      conversationId: data.conversationId,
+    socket.current = io("https://learnmatebe.onrender.com", {
+      transports: ["websocket", "polling"],
+      withCredentials: true,
     });
-  });
 
-  return () => {
-    socket.current.disconnect();
-  };
-}, []);
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+        conversationId: data.conversationId,
+      });
+    });
 
+    return () => {
+      socket.current.disconnect();
+    };
+  }, []);
 
+  // When a new message arrives
   useEffect(() => {
     if (
       arrivalMessage &&
@@ -84,7 +87,7 @@ useEffect(() => {
     }
   }, [arrivalMessage, currentChat, user.account.id]);
 
-
+  // Add user to socket list
   useEffect(() => {
     socket.current.emit("addUser", user.account.id);
     socket.current.on("getUsers", (users) => {
@@ -95,16 +98,14 @@ useEffect(() => {
       }
     });
   }, [user]);
+
+  // Send message
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const message = {
-    //   sender: user.account.id,
-    //   text: newMessage,
-    //   conversationId: currentChat._id,
-    // };
     const receiverId = currentChat.members.find(
-      (member) => member !== user.account.id,
+      (member) => member !== user.account.id
     );
+
     socket.current.emit("sendMessage", {
       senderId: user.account.id,
       receiverId,
@@ -114,10 +115,9 @@ useEffect(() => {
 
     try {
       const data = await ApiSendMessage(receiverId, newMessage);
-
       const newMsg = {
         ...data,
-        sender: { _id: user.account.id, image: user.account.image }
+        sender: { _id: user.account.id, image: user.account.image },
       };
 
       setMessages([...messages, newMsg]);
@@ -125,13 +125,14 @@ useEffect(() => {
     } catch (err) {
       console.log(err);
     }
-
   };
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/signin");
     }
   }, [isAuthenticated, navigate]);
+
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -143,6 +144,7 @@ useEffect(() => {
     };
     getConversations();
   }, []);
+
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -162,30 +164,10 @@ useEffect(() => {
     getMessages();
   }, [currentChat]);
 
-  useEffect(() => {
-    if (!currentChat) return;
-
-    const markMessagesAsSeen = async () => {
-      try {
-        let response = await ApiMarkMessagesAsSeen(currentChat._id);
-
-        const senderId = currentChat.members.find(m => m !== user.account.id);
-        socket.current.emit("seenMessage", {
-          senderId,
-          conversationId: currentChat._id,
-        });
-      } catch (err) {
-        console.error("Error marking messages as seen:", err);
-      }
-    };
-
-    markMessagesAsSeen();
-  }, [currentChat]);
-
+  // Handle seen message received
   useEffect(() => {
     socket.current.on("messageSeen", ({ conversationId }) => {
       if (currentChat && currentChat._id === conversationId) {
-        // Cập nhật trạng thái tất cả các tin nhắn là seen
         setMessages((prevMessages) =>
           prevMessages.map((msg) =>
             msg.sender._id === user.account.id ? { ...msg, seen: true } : msg
@@ -193,40 +175,41 @@ useEffect(() => {
         );
       }
     });
-  }, [currentChat]);
+  }, [currentChat, user.account.id]);
 
   return (
     <>
-      {/* <Topbar /> */}
-      <Header/>
+      <Header />
       <div className="messenger">
         <div className="chatMenu">
           <div className="chatMenuWrapper">
             <input placeholder="Search for friends" className="chatMenuInput" />
-            {conversations && Array.isArray(conversations) ? conversations.map((c) => (
-              <div key={c._id} onClick={() => navigate(`/messenger/${c._id}`)}>
-                <Conversation conversation={c} currentUser={user.account} />
-              </div>
-            )) : <p>Loading conversations...</p>}
-
-
+            {conversations && conversations.length > 0 ? (
+              conversations.map((c) => (
+                <div key={c._id} onClick={() => navigate(`/messenger/${c._id}`)}>
+                  <Conversation conversation={c} currentUser={user.account} />
+                </div>
+              ))
+            ) : (
+              <p>Loading conversations...</p>
+            )}
           </div>
         </div>
         <ChatBox
-  currentChat={currentChat}
-  messages={messages}
-  newMessage={newMessage}
-  setNewMessage={setNewMessage}
-  handleSubmit={handleSubmit}
-  scrollRef={scrollRef}
-  user={user}
-  receiver={receiver}
-/>
-
-        <div className="chatOnline">
-        </div>
+          currentChat={currentChat}
+          messages={messages}
+          newMessage={newMessage}
+          setNewMessage={setNewMessage}
+          handleSubmit={handleSubmit}
+          scrollRef={scrollRef}
+          user={user}
+          receiver={receiver}
+          socket={socket}
+        />
+        <div className="chatOnline"></div>
       </div>
     </>
-  )
-}
-export default Messenger
+  );
+};
+
+export default Messenger;
