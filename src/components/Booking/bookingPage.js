@@ -165,7 +165,7 @@ export default function BookingPage() {
           <p><strong>Email:</strong> {user?.email || 'Không rõ'}</p>
           <p><strong>SĐT:</strong> {user?.phoneNumber || 'Không rõ'}</p>
           <p><strong>Giới tính:</strong> {user?.gender || 'Không rõ'}</p>
-          <p><strong>Môn:</strong> {tutor.subject || 'Không rõ'}</p>
+          <p><strong>Môn:</strong> {tutor.subjects || 'Không rõ'}</p>
           <p><strong>Giá:</strong> {tutor.pricePerHour?.toLocaleString()} VND / giờ</p>
           <p><strong>Mô tả:</strong> {tutor.description || 'Không có mô tả'}</p>
           <button className='btn btn-secondary' onClick={handleChatNow}>Trò chuyện ngay</button>
@@ -180,14 +180,9 @@ export default function BookingPage() {
       <div className="booking-wrapper">
       {/* Left Panel: Đánh giá */}
       <div className="side-panel left-panel">
-        <h3>Đánh giá</h3>
-        <ul>
-          <li><strong>⭐⭐⭐⭐⭐ (4.9)</strong> - 25 lượt đánh giá</li>
-          <li>“Rất nhiệt tình, con tôi tiến bộ nhanh”</li>
-          <li>“Giải thích dễ hiểu, đúng giờ”</li>
-          <li>“Phương pháp dạy dễ hiểu và sinh động”</li>
-        </ul>
-      </div>
+  <h3>Đánh giá từ học viên</h3>
+  {renderReviews()}
+</div>
 
       {/* Center: Thông tin gia sư + đặt lịch */}
       <div className="booking-container">
