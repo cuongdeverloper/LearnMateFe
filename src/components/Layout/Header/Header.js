@@ -1,19 +1,44 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { FaShoppingBag, FaComments, FaChalkboardTeacher, FaArrowLeft } from "react-icons/fa";
+import { FaShoppingBag, FaComments, FaChalkboardTeacher } from "react-icons/fa";
 import axios from "../../../Service/AxiosCustomize";
 import "./Header.scss";
+import { getTutorActiveStatus, updateTutorActiveStatus } from "../../../Service/ApiService";
 
 const Header = () => {
   const navigate = useNavigate();
   const accessToken = useSelector((state) => state.user.account.access_token);
   const role = useSelector((state) => state.user.account.role);
+  console.log(role);
   const [showDropdown, setShowDropdown] = useState(false);
   const [savedTutorIds, setSavedTutorIds] = useState([]);
   const dropdownRef = useRef(null);
-  const [user, setUser] = useState(null);
+  const [isActive, setIsActive] = useState(false);
 
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const fetchTutorStatus = async () => {
+      if (role === "tutor" && accessToken) {
+        try {
+          const res = await getTutorActiveStatus();
+          setIsActive(res.active);
+        } catch (err) {
+          console.error("Lỗi lấy trạng thái tutor:", err);
+        }
+      }
+    };
+    fetchTutorStatus();
+  }, [role, accessToken]);
+  const toggleTutorStatus = async () => {
+    try {
+      const newStatus = !isActive;
+      await updateTutorActiveStatus(newStatus);
+      setIsActive(newStatus);
+    } catch (err) {
+      console.error("Lỗi cập nhật trạng thái tutor:", err);
+    }
+  };
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -43,10 +68,7 @@ const Header = () => {
   return (
     <header className="custom-header">
       <div className="header-inner">
-        <div className="back-button" onClick={() => navigate(-1)}>
-      <FaArrowLeft />
-    </div>
-        <Link to="/" className="logo-text">
+        <Link to="/StudentHomepage" className="logo-text">
           <FaChalkboardTeacher className="logo-icon" />
           LearnMate
         </Link>
@@ -54,7 +76,7 @@ const Header = () => {
         <nav className="nav-links">
           <Link to="/tutor">Tìm gia sư</Link>
           <Link to="/community">Cộng đồng</Link>
-          {accessToken && <Link to="/messenger"><FaComments style={{ marginRight: 5 }} /> Chat</Link>}
+          {accessToken && <Link to="/chat"><FaComments style={{ marginRight: 5 }} /> Chat</Link>}
           {accessToken && <Link to="/user/my-courses">Khóa học</Link>}
           {accessToken && <Link to="/user/bookinghistory">Lịch sử</Link>}
           {role === "admin" && <Link to="/admin">Admin</Link>}
@@ -69,6 +91,17 @@ const Header = () => {
                   <span className="cart-badge">{savedTutorIds.length}</span>
                 )}
               </div>
+              {role === "tutor" && (
+  <div className="tutor-status-toggle">
+    <label className="switch">
+      <input type="checkbox" checked={isActive} onChange={toggleTutorStatus} />
+      <span className="slider round"></span>
+    </label>
+    <span className="status-label">
+      {isActive ? "Đang nhận học viên" : "Tạm ẩn"}
+    </span>
+  </div>
+)}
               <div className="avatar-group" ref={dropdownRef}>
                 {user && (
                   <>
@@ -92,9 +125,9 @@ const Header = () => {
                     <li onClick={() => { setShowDropdown(false); navigate("/user/my-courses"); }}>
                       Khóa học của tôi
                     </li>
-                    {/* <li onClick={() => { setShowDropdown(false); navigate("/signin"); }}>
+                    <li onClick={() => { setShowDropdown(false); navigate("/signin"); }}>
                       Đăng xuất
-                    </li> */}
+                    </li>
                   </ul>
                 )}
               </div>

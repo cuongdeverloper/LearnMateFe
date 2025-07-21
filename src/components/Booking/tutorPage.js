@@ -7,21 +7,20 @@ import { FaStar } from "react-icons/fa";
 import { FaBookmark, FaShoppingBag } from "react-icons/fa";
 import { toast } from "react-toastify"; // Import toast
 import "../../scss/TutorListPage.scss";
-import Header from "../Layout/Header/Header";
 
 const classSubjectsMap = {
-  1: ["Toán", "Tiếng Việt"],
+  1: ["Math", "Tiếng Việt"],
   2: ["Toán", "Tiếng Việt", "Tiếng Anh"],
   3: ["Toán", "Tiếng Việt", "Tiếng Anh"],
   4: ["Toán", "Tiếng Việt", "Tiếng Anh", "Khoa học"],
-  5: ["Toán", "Tiếng Việt", "Tiếng Anh", "Khoa học", "Lịch Sử", "Địa Lý"],
-  6: ["Toán", "Ngữ Văn", "Tiếng Anh", "Vật Lý", "Lịch Sử", "Địa Lý"],
-  7: ["Toán", "Ngữ Văn", "Tiếng Anh", "Vật Lý", "Hóa Học", "Sinh Học", "Lịch Sử", "Địa Lý"],
-  8: ["Toán", "Ngữ Văn", "Tiếng Anh", "Vật Lý", "Hóa Học", "Sinh Học", "Lịch Sử", "Địa Lý"],
-  9: ["Toán", "Ngữ Văn", "Tiếng Anh", "Vật Lý", "Hóa Học", "Sinh Học", "Lịch Sử", "Địa Lý"],
-  10: ["Toán", "Ngữ Văn", "Tiếng Anh", "Vật Lý", "Hóa Học", "Sinh Học", "Tin Học", "Lịch Sử", "Địa Lý", "GDCD"],
-  11: ["Toán", "Ngữ Văn", "Tiếng Anh", "Vật Lý", "Hóa Học", "Sinh Học", "Tin Học", "Lịch Sử", "Địa Lý", "GDCD"],
-  12: ["Toán", "Ngữ Văn", "Tiếng Anh", "Vật Lý", "Hóa Học", "Sinh Học", "Tin Học", "Lịch Sử", "Địa Lý", "GDCD"],
+  5: ["Toán", "Tiếng Việt", "Tiếng Anh", "Khoa học", "Lịch Sử"],
+  6: ["Toán", "Văn", "Tiếng Anh", "Vật Lý"],
+  7: ["Toán", "Văn", "Tiếng Anh", "Vật Lý", "Hóa Học", "Sinh Học"],
+  8: ["Toán", "Văn", "Tiếng Anh", "Vật Lý", "Hóa Học", "Sinh Học", "Lịch Sử"],
+  9: ["Toán", "Văn", "Tiếng Anh", "Vật Lý", "Hóa Học", "Sinh Học", "Địa Lý"],
+  10: ["Toán", "Văn", "Tiếng Anh", "Lý", "Hóa", "Sinh", "Tin Học"],
+  11: ["Toán", "Văn", "Tiếng Anh", "Lý", "Hóa", "Sinh", "Tin Học"],
+  12: ["Toán", "Văn", "Tiếng Anh", "Lý", "Hóa", "Sinh", "Tin Học"],
 };
 
 export default function TutorListPage() {
@@ -112,7 +111,9 @@ export default function TutorListPage() {
       );
 
       const res = await axios.get("/tutors", { params: cleanFilters });
-      setTutors(res.tutors || []);
+      
+      const activeTutors = (res.tutors || []).filter(tutor => tutor.active === true);
+      setTutors(activeTutors);
     } catch (error) {
       toast.error("Lấy danh sách tutor thất bại"); // Thay thế alert
       console.error(error);
@@ -214,7 +215,6 @@ export default function TutorListPage() {
 
   return (
     <div className="page-container">
-      <Header/>
       <header className="page-header">
         <h1>Tìm Gia Sư Hoàn Hảo Của Bạn</h1>
         <p className="sub-title">
@@ -329,15 +329,13 @@ export default function TutorListPage() {
               </p>
             ) : (
               <div className="tutor-list">
-               
                 {tutors.map((tutor) => {
                   const isSaved = savedTutorIds.includes(tutor._id);
                   return (
-                    
                     <div
                       key={tutor._id}
                       className="tutor-card"
-                      onClick={() => navigate(`/book/${tutor._id}`)}
+                      onClick={() => navigate(`/tutors/${tutor._id}`)}
                     >
                       <img
                         className="tutor-avatar"
@@ -369,7 +367,7 @@ export default function TutorListPage() {
                         <div className="tutor-price">
                           Giá:{" "}
                           {tutor.pricePerHour?.toLocaleString() || "Liên hệ"}{" "}
-                          VND / buổi
+                          VND / giờ
                         </div>
                         <div className="tutor-actions">
                           <button

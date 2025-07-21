@@ -1053,6 +1053,41 @@ export const submitTutorApplication = async (formData) => {
     };
   }
 };
+export const getTutorActiveStatus = async () => {
+  const token = Cookies.get("accessToken");
+
+  if (!token) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    const res = await axios.get('/tutor/active-status', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data;
+  } catch (error) {
+    console.error("Lỗi lấy trạng thái tutor:", error);
+    return { success: false, message: error?.response?.data?.message || "Lỗi server" };
+  }
+};
+
+export const updateTutorActiveStatus = async (active) => {
+  const token = Cookies.get("accessToken");
+
+  if (!token) {
+    return { success: false, message: "Unauthorized" };
+  }
+
+  try {
+    const res = await axios.put('/tutor/active-status', { active }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data;
+  } catch (error) {
+    console.error("Lỗi cập nhật trạng thái tutor:", error);
+    return { success: false, message: error?.response?.data?.message || "Lỗi cập nhật" };
+  }
+};
 
 export {
   ApiLogin, sendOTPApi, ApiRegister, loginWGoogle, requestPasswordResetApi, resetPasswordApi,
