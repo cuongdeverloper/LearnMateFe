@@ -82,9 +82,8 @@ const Layout = () => {
           <Route path="/otp-verify" element={<EnterOTPRegister />} />
           <Route path="auth/callback" element={<AuthCallback />} />
           <Route path="/forgot-password" element={
-            <ProtectedRoute allowedRoles={['tutor', 'student']}>
-              <RequestPasswordReset />
-            </ProtectedRoute>} />
+                <RequestPasswordReset />
+           } />
           <Route path="/reset-password" element={
             <ProtectedRoute allowedRoles={['tutor', 'student']}>
               <ResetPassword />

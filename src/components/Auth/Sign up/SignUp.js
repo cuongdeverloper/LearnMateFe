@@ -14,7 +14,7 @@ const SignUp = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [gender, setGender] = useState("");
   const [image, setImage] = useState(null);
-  const [role,setRole] = useState('');
+  const [role,setRole] = useState('student');
   const [imagePreview, setImagePreview] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const navigate = useNavigate();
@@ -36,6 +36,8 @@ const SignUp = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   setIsLoadingRegister(true);
+  let roleDefault = 'student'
+  setRole(roleDefault)
   try {
     const response = await ApiRegister(username, email, password, phoneNumber, gender, role, image);
     setIsLoadingRegister(false);
@@ -61,19 +63,6 @@ const handleSubmit = async (e) => {
     <div className="signup-form-container">
       <form className="signup-form">
         <h2>Sign up</h2>
-        <label>
-          You want to be a
-          <select
-            id="genderForm"
-            className="form-control input-field"
-            value={role}
-            onChange={(event) => setRole(event.target.value)}
-          >
-            <option value="">Select role</option>
-            <option value="tutor">Tutor</option>
-            <option value="student">Student</option>
-          </select>
-        </label>
         <label>
           Full name
           <input
