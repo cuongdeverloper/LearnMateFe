@@ -53,16 +53,25 @@ useEffect(() => {
 
 
   useEffect(() => {
-    socket.current = io("https://quizonebe.onrender.com");
-    socket.current.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
-        conversationId: data.conversationId,
-      });
+  socket.current = io("https://quizonebe.onrender.com", {
+    transports: ["websocket", "polling"],
+    withCredentials: true,
+  });
+
+  socket.current.on("getMessage", (data) => {
+    setArrivalMessage({
+      sender: data.senderId,
+      text: data.text,
+      createdAt: Date.now(),
+      conversationId: data.conversationId,
     });
-  }, []);
+  });
+
+  return () => {
+    socket.current.disconnect();
+  };
+}, []);
+
 
   useEffect(() => {
     if (
