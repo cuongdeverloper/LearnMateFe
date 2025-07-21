@@ -85,9 +85,7 @@ const Layout = () => {
                 <RequestPasswordReset />
            } />
           <Route path="/reset-password" element={
-            <ProtectedRoute allowedRoles={['tutor', 'student']}>
-              <ResetPassword />
-            </ProtectedRoute>} />
+              <ResetPassword />} />
           <Route path="/messenger" element={
             <ProtectedRoute allowedRoles={['tutor', 'student', 'admin']}>
               <Messenger />
