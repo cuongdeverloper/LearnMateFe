@@ -11,7 +11,6 @@ const ChatBox = ({
   user,
   receiver
 }) => {
-  console.log(receiver)
   return (
     <div className="chatBox">
       <div className="chatBoxWrapper">

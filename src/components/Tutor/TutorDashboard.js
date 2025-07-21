@@ -63,6 +63,9 @@ const TutorDashboard = () => {
       ) : (
         <div className="user-info">
           <span style={{ marginRight: '12px' }}>{user?.username || "Tài khoản"}</span>
+          <button className="btn btn-secondary" onClick={()=> navigate('/messenger')}>
+            Chat
+          </button>
           <button className="login-btn logout-btn" onClick={handleLogout}>
             Đăng xuất
           </button>

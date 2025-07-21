@@ -6,7 +6,6 @@ const Main = () => {
     const checkRole = useSelector(user => user.user.account.role);
     const user = useSelector((state) => state.user?.isAuthenticated);
     const navigate = useNavigate();
-    console.log(checkRole)
      useEffect(() => {
       if (checkRole === "tutor") {
         navigate("/TutorDashboard");
