@@ -53,7 +53,7 @@ useEffect(() => {
 
 
   useEffect(() => {
-    socket.current = io("ws://localhost:6060");
+    socket.current = io("ws://https://quizonebe.onrender.com");
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,

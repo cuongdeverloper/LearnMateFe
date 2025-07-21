@@ -229,7 +229,7 @@ const StudentHomePage = () => {
           </div>
         </div>
 
-        <div className="footer-bottom" data-aos="fade-up">
+        <div className="footer-bottom">
           <p>© 2025 LearnMate. All rights reserved.</p>
         </div>
       </footer>
