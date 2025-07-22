@@ -111,7 +111,7 @@ const Layout = () => {
           <Route
             path="/saved-tutors"
             element={
-              <ProtectedRoute allowedRoles={['student']}>
+              <ProtectedRoute allowedRoles={['student','tutor']}>
                 <AppLayout>
                   <SavedTutorsPage />
                 </AppLayout>
@@ -122,7 +122,7 @@ const Layout = () => {
           <Route
             path="/book/:tutorId"
             element={
-              <ProtectedRoute allowedRoles={['student']}>
+              <ProtectedRoute allowedRoles={['student','tutor']}>
                 <BookingPage />
               </ProtectedRoute>
             }
