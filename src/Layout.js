@@ -74,9 +74,7 @@ const Layout = () => {
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Main />}>
             <Route path="/" element={<StudentHomePage />} />
-          </Route>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/otp-verify" element={<EnterOTPRegister />} />
