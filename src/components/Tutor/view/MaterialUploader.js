@@ -16,7 +16,7 @@ const MaterialUploader = () => {
   const loadBookings = async () => {
     if (!tutorId) return;
     try {
-      const res = await fetchPendingBookings();
+      const res = await fetchPendingBookings(tutorId);
       setBookings(res);
     } catch {
       setBookings([]);
