@@ -1064,10 +1064,10 @@ export const getTutorActiveStatus = async () => {
     const res = await axios.get('/tutor/active-status', {
       headers: { Authorization: `Bearer ${token}` }
     });
-    return res.data;
+    return res;
   } catch (error) {
     console.error("Lỗi lấy trạng thái tutor:", error);
-    return { success: false, message: error?.response?.data?.message || "Lỗi server" };
+    return { success: false, message: error?.response?.message || "Lỗi server" };
   }
 };
 
@@ -1082,10 +1082,10 @@ export const updateTutorActiveStatus = async (active) => {
     const res = await axios.put('/tutor/active-status', { active }, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    return res.data;
+    return res;
   } catch (error) {
     console.error("Lỗi cập nhật trạng thái tutor:", error);
-    return { success: false, message: error?.response?.data?.message || "Lỗi cập nhật" };
+    return { success: false, message: error?.response?.message || "Lỗi cập nhật" };
   }
 };
 
