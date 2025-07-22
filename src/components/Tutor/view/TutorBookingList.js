@@ -7,10 +7,10 @@ const TutorBookingList = () => {
   const [bookings, setBookings] = useState([]);
   const tutorId = useSelector(state => state.user.account.id);
 
-  const loadBookings = async () => {
-    const res = await fetchPendingBookings(tutorId);
-    setBookings(res);
-  };
+ const loadBookings = async () => {
+  const res = await fetchPendingBookings(); 
+  setBookings(res);
+};
 
   const handleResponse = async (id, action, learnerId) => {
     await respondBooking(id, action, learnerId);

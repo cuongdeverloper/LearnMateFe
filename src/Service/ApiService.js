@@ -198,8 +198,19 @@ const fetchTutorsBySubjects = async (subjectsArray) => {
 
 
 
-const fetchPendingBookings = (tutorId) => {
-  return axios.get(`/api/tutor/bookings/pending/${tutorId}`);
+export const fetchPendingBookings = async () => {
+  const token = Cookies.get("accessToken");
+
+  if (!token) {
+    window.open("/signin", "_blank");
+    return;
+  }
+
+  return axios.get(`/api/tutor/bookings/pending`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
 };
 const respondBooking = (bookingId, action, learnerId) => {
   return axios.post(`/api/tutor/bookings/respond`, { bookingId, action, learnerId });
