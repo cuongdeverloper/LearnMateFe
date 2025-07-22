@@ -177,11 +177,11 @@ const Layout = () => {
               <TutorManagement />
             </ProtectedRoute>
           } />
-          <Route path="/admin/applications" element={
+          {/* <Route path="/admin/applications" element={
             <ProtectedRoute allowedRoles={['admin']}>
               <TutorApplications />
             </ProtectedRoute>
-          } />
+          } /> */}
           <Route path="/profile"
             element={
               <ProtectedRoute allowedRoles={['tutor', 'student', 'admin']}>
@@ -196,7 +196,7 @@ const Layout = () => {
           <Route
             path="/review/:bookingId"
             element={
-              <ProtectedRoute allowedRoles={['student']}>
+              <ProtectedRoute allowedRoles={['student','tutor']}>
                 <ReviewCoursePage />
               </ProtectedRoute>
             }

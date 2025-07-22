@@ -120,6 +120,9 @@ const Header = () => {
                 )}
                 {showDropdown && (
                   <ul className="dropdown-menu">
+                    <li onClick={() => { setShowDropdown(false); navigate('/profile'); }}>
+                      Trang cá nhân
+                    </li>
                     <li onClick={() => { setShowDropdown(false); navigate("/user/paymentinfo"); }}>
                       Thanh toán
                     </li>
