@@ -198,7 +198,7 @@ const fetchTutorsBySubjects = async (subjectsArray) => {
 
 
 
-export const fetchPendingBookings = async () => {
+ const fetchPendingBookings = async () => {
   const token = Cookies.get("accessToken");
 
   if (!token) {
