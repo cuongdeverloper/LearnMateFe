@@ -80,6 +80,7 @@ const Header = () => {
           {accessToken && <Link to="/messenger"><FaComments style={{ marginRight: 5 }} /> Chat</Link>}
           {accessToken && <Link to="/user/my-courses">Khóa học</Link>}
           {accessToken && <Link to="/user/bookinghistory">Lịch sử</Link>}
+          {role === "tutor" && <Link to="/TutorDashboard">BookingManagement</Link>}
           {role === "admin" && <Link to="/admin">Admin</Link>}
         </nav>
 
@@ -104,13 +105,7 @@ const Header = () => {
                 </div>
               )}
 
-              {role === "tutor" && (
-                <div className="tutor-status-toggle">
-                  <label className="switch">
-                    <Button className="btn btn-primary">TutorManagement</Button>
-                  </label>                
-                </div>
-              )}
+              
 
               <div className="avatar-group" ref={dropdownRef}>
                 {user && (
