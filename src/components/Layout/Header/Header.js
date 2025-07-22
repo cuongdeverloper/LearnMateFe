@@ -68,7 +68,7 @@ const Header = () => {
   return (
     <header className="custom-header">
       <div className="header-inner">
-        <Link to="/StudentHomepage" className="logo-text">
+        <Link to="/" className="logo-text">
           <FaChalkboardTeacher className="logo-icon" />
           LearnMate
         </Link>
@@ -76,7 +76,7 @@ const Header = () => {
         <nav className="nav-links">
           <Link to="/tutor">Tìm gia sư</Link>
           <Link to="/community">Cộng đồng</Link>
-          {accessToken && <Link to="/chat"><FaComments style={{ marginRight: 5 }} /> Chat</Link>}
+          {accessToken && <Link to="/messenger"><FaComments style={{ marginRight: 5 }} /> Chat</Link>}
           {accessToken && <Link to="/user/my-courses">Khóa học</Link>}
           {accessToken && <Link to="/user/bookinghistory">Lịch sử</Link>}
           {role === "admin" && <Link to="/admin">Admin</Link>}
