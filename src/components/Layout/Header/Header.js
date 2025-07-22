@@ -5,6 +5,7 @@ import { FaShoppingBag, FaComments, FaChalkboardTeacher } from "react-icons/fa";
 import axios from "../../../Service/AxiosCustomize";
 import "./Header.scss";
 import { getTutorActiveStatus, updateTutorActiveStatus } from "../../../Service/ApiService";
+import { Button } from "antd";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -92,16 +93,25 @@ const Header = () => {
                 )}
               </div>
               {role === "tutor" && (
-  <div className="tutor-status-toggle">
-    <label className="switch">
-      <input type="checkbox" checked={isActive} onChange={toggleTutorStatus} />
-      <span className="slider round"></span>
-    </label>
-    <span className="status-label">
-      {isActive ? "Đang nhận học viên" : "Tạm ẩn"}
-    </span>
-  </div>
-)}
+                <div className="tutor-status-toggle">
+                  <label className="switch">
+                    <input type="checkbox" checked={isActive} onChange={toggleTutorStatus} />
+                    <span className="slider round"></span>
+                  </label>
+                  <span className="status-label">
+                    {isActive ? "Đang nhận học viên" : "Tạm ẩn"}
+                  </span>
+                </div>
+              )}
+
+              {role === "tutor" && (
+                <div className="tutor-status-toggle">
+                  <label className="switch">
+                    <Button className="btn btn-primary">TutorManagement</Button>
+                  </label>                
+                </div>
+              )}
+
               <div className="avatar-group" ref={dropdownRef}>
                 {user && (
                   <>
