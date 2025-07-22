@@ -22,6 +22,7 @@ const StudentHomePage = () => {
   }
   const isAuthenticated = useSelector(state => state.user.isAuthenticated);
   const user = useSelector(state => state.user);
+  const role = useSelector((state) => state.user.account.role);
 
   const isTokenExpired = (token) => {
     try {
@@ -68,6 +69,8 @@ const StudentHomePage = () => {
         <nav className="nav">
           <a href="/tutor">Tìm gia sư</a>
           <a href="/tutor-application">Trở thành gia sư</a>
+          {role === "tutor" && <a to="/TutorDashboard">BookingManagement</a>}
+          {role === "admin" && <a to="/admin/dashboard">Admin</a>}
         </nav>
         <div className="right-section">
           <LangLogin />

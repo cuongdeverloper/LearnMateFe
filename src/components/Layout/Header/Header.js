@@ -11,7 +11,6 @@ const Header = () => {
   const navigate = useNavigate();
   const accessToken = useSelector((state) => state.user.account.access_token);
   const role = useSelector((state) => state.user.account.role);
-  console.log(role);
   const [showDropdown, setShowDropdown] = useState(false);
   const [savedTutorIds, setSavedTutorIds] = useState([]);
   const dropdownRef = useRef(null);
@@ -81,7 +80,7 @@ const Header = () => {
           {accessToken && <Link to="/user/my-courses">Khóa học</Link>}
           {accessToken && <Link to="/user/bookinghistory">Lịch sử</Link>}
           {role === "tutor" && <Link to="/TutorDashboard">BookingManagement</Link>}
-          {role === "admin" && <Link to="/admin">Admin</Link>}
+          {role === "admin" && <Link to="/admin/dashboard">Admin</Link>}
         </nav>
 
         <div className="header-right">
