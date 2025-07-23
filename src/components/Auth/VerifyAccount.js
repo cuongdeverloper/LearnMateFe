@@ -23,7 +23,6 @@ const VerifyAccount = () => {
 
       try {
         const response = await verifyAccountApi(token);
-        console.log(response)
         setStatus("success");
         setMessage(response.message || "Your account has been verified.");
         setTimeout(() => {

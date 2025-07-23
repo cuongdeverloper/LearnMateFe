@@ -1088,6 +1088,29 @@ export const updateTutorActiveStatus = async (active) => {
     return { success: false, message: error?.response?.message || "Lỗi cập nhật" };
   }
 };
+ const reportBooking = async (bookingId, reason) => {
+  try {
+    const token = Cookies.get("accessToken"); // Correctly retrieves token from cookies
+
+    const response = await axios.post(
+      '/report', // URL
+      { // Data payload (body of the request)
+        targetType: 'booking',
+        targetId: bookingId,
+        reason: reason
+      },
+      { // Configuration object (this is where headers, params, etc., go)
+        headers: {
+          Authorization: `Bearer ${token}` // Correct placement of Authorization header
+        }
+      }
+    );
+    return response; // Assumes your backend returns { success: true, message: ... }
+  } catch (error) {
+    console.error("Error reporting booking:", error);
+    return { success: false, message: error.response?.data?.message || "Lỗi khi gửi báo cáo từ client." };
+  }
+};
 
 export {
   ApiLogin, sendOTPApi, ApiRegister, loginWGoogle, requestPasswordResetApi, resetPasswordApi,
@@ -1108,5 +1131,5 @@ export {
   markNotificationAsReadApi, markAllNotificationsAsReadApi, deleteNotificationApi, fetchUsersApi, blockUserApi,
   unblockUserApi, deleteUserApi, fetchApplicationsApi, approveApplicationApi,
   rejectApplicationApi,verifyTutorApi,unverifyTutorApi,deleteTutorApi,fetchTutorsApi,
-  verifyAccountApi,ApiGetProfile,ApiUpdateProfile,ApiChangePassword,getBookingsByTutorId
+  verifyAccountApi,ApiGetProfile,ApiUpdateProfile,ApiChangePassword,getBookingsByTutorId,reportBooking
 }
