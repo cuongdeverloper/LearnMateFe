@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { uploadMaterial, getMaterialsForBooking, fetchPendingBookings } from '../../../Service/ApiService';
+import { uploadMaterial, getMaterialsForBooking, fetchPendingBookings, getTutorSchedule } from '../../../Service/ApiService';
 import './MaterialUploader.scss';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -16,7 +16,7 @@ const MaterialUploader = () => {
   const loadBookings = async () => {
     if (!tutorId) return;
     try {
-      const res = await fetchPendingBookings(tutorId);
+      const res = await getTutorSchedule(tutorId);
       setBookings(res);
     } catch {
       setBookings([]);

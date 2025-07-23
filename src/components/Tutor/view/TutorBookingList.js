@@ -32,7 +32,6 @@ const TutorBookingList = () => {
         <thead>
           <tr>
             <th>Học viên</th>
-            <th>Thời gian bắt đầu</th>
             <th>Trạng thái</th>
             <th>Hành động</th>
           </tr>
@@ -41,7 +40,6 @@ const TutorBookingList = () => {
           {bookings.map(b => (
             <tr key={b._id}>
               <td>{b.learnerId?.username || b.studentId}</td>
-              <td>{new Date(b.startTime).toLocaleString()}</td>
               <td><span className={`status ${b.status}`}>{b.status}</span></td>
               <td>
                 <button className="btn-accept" onClick={() => handleResponse(b._id, 'approve', b.studentId)}>✔️ Duyệt</button>
