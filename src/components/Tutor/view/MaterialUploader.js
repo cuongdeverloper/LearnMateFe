@@ -3,6 +3,7 @@ import { uploadMaterial, getMaterialsForBooking, fetchPendingBookings, getTutorS
 import './MaterialUploader.scss';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import dayjs from 'dayjs';
 
 const MaterialUploader = () => {
   const tutorId = useSelector(state => state.user?.account?.id);
@@ -88,8 +89,9 @@ const MaterialUploader = () => {
         <select value={bookingId} onChange={e => setBookingId(e.target.value)}>
           <option value="">-- Chọn booking --</option>
           {(bookings || []).map(bk => (
-            <option key={bk._id} value={bk._id}>
-              {bk._id} - {bk.learnerId?.username || 'Học viên'}
+            <option key={bk.bookingId} value={bk.bookingId}>
+              {dayjs(mat.createdAt).format('DD/MM/YYYY - HH:mm')} - {bk.learnerId?.username || 'Học viên'}
+
             </option>
           ))}
         </select>

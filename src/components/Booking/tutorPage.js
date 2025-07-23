@@ -367,7 +367,7 @@ export default function TutorListPage() {
                         <div className="tutor-price">
                           Giá:{" "}
                           {tutor.pricePerHour?.toLocaleString() || "Liên hệ"}{" "}
-                          VND / giờ
+                          VND / buổi
                         </div>
                         <div className="tutor-actions">
                           <button
