@@ -34,6 +34,7 @@ const Dashboard = () => {
 const menuItems = [
   { key: 'dashboard', icon: <PieChartOutlined />, label: 'Dashboard' },
   { key: 'users', icon: <UserOutlined />, label: 'User Management' },
+  { key: 'applications', icon: <FileOutlined />, label: 'Tutor Applications' },
   { key: 'tutors', icon: <TeamOutlined />, label: 'Tutor Management' },
   { key: 'bookings', icon: <FileOutlined />, label: 'Booking Management' },
 ];
