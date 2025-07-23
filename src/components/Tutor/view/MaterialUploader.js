@@ -28,58 +28,58 @@ const MaterialUploader = () => {
     loadBookings();
   }, [tutorId]);
 
- useEffect(() => {
-  const fetchMaterials = async () => {
-    if (!bookingId) {
-      setMaterials([]);
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      if (!bookingId) {
+        setMaterials([]);
+        return;
+      }
+
+      try {
+        const res = await getMaterialsForBooking(bookingId);
+        console.log(res)
+        const list = res;
+        setMaterials(Array.isArray(list) ? list : []);
+      } catch (error) {
+        console.error("❌ Error in fetchMaterials:", error);
+        setMaterials([]);
+      }
+    };
+
+    fetchMaterials();
+  }, [bookingId]);
+
+  const handleUpload = async () => {
+    if (!fileUrl || !title || !bookingId) {
+      toast.warn('Vui lòng nhập đầy đủ thông tin');
       return;
     }
 
     try {
-      const res = await getMaterialsForBooking(bookingId);
-      console.log(res)
-      const list = res;
-      setMaterials(Array.isArray(list) ? list : []);
-    } catch (error) {
-      console.error("❌ Error in fetchMaterials:", error);
-      setMaterials([]);
+      console.log('▶️ Uploading:', { bookingId, title, description, fileUrl });
+
+      const res = await uploadMaterial({
+        bookingId,
+        title: title.trim(),
+        description: description.trim(),
+        fileUrl: fileUrl.trim()
+      });
+      if (res.errorCode === 0) {
+        toast.success('Tải tài liệu thành công');
+        setFileUrl('');
+        setTitle('');
+        setDescription('');
+        const res1 = await getMaterialsForBooking(bookingId);
+        console.log(res1)
+        setMaterials(res1.data || []);
+      } else {
+        toast.error(res.message || 'Lỗi upload');
+      }
+    } catch (err) {
+      toast.error('Lỗi hệ thống khi upload');
+      console.error('Upload error:', err);
     }
   };
-
-  fetchMaterials();
-}, [bookingId]);
-
- const handleUpload = async () => {
-  if (!fileUrl || !title || !bookingId) {
-    toast.warn('Vui lòng nhập đầy đủ thông tin');
-    return;
-  }
-
-  try {
-    console.log('▶️ Uploading:', { bookingId, title, description, fileUrl });
-
-    const res = await uploadMaterial({
-      bookingId,
-      title: title.trim(),
-      description: description.trim(),
-      fileUrl: fileUrl.trim()
-    });
-    if (res.errorCode === 0) {
-      toast.success('Tải tài liệu thành công');
-      setFileUrl('');
-      setTitle('');
-      setDescription('');
-      const res1 = await getMaterialsForBooking(bookingId);
-      console.log(res1)
-      setMaterials(res1.data || []);
-    } else {
-      toast.error(res.message || 'Lỗi upload');
-    }
-  } catch (err) {
-    toast.error('Lỗi hệ thống khi upload');
-    console.error('Upload error:', err);
-  }
-};
 
 
   return (
@@ -90,8 +90,7 @@ const MaterialUploader = () => {
           <option value="">-- Chọn booking --</option>
           {(bookings || []).map(bk => (
             <option key={bk.bookingId} value={bk.bookingId}>
-              {dayjs(mat.createdAt).format('DD/MM/YYYY - HH:mm')} - {bk.learnerId?.username || 'Học viên'}
-
+              {dayjs(bk.date).format('DD/MM/YYYY - HH:mm')} - {bk.learnerId?.username || 'Học viên'}
             </option>
           ))}
         </select>
