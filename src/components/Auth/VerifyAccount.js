@@ -23,15 +23,16 @@ const VerifyAccount = () => {
 
       try {
         const response = await verifyAccountApi(token);
+        console.log(response)
         setStatus("success");
-        setMessage(response.data.message || "Your account has been verified.");
+        setMessage(response.message || "Your account has been verified.");
         setTimeout(() => {
           navigate("/signin");
         }, 3000);
       } catch (error) {
         setStatus("failed");
         setMessage(
-          error?.response?.data?.message || "Verification failed. Please try again."
+          error?.response?.message || "Verification failed. Please try again."
         );
       }
     };
